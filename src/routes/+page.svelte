@@ -12,7 +12,7 @@
 			>
 		</h1>
 		<p class="mb-8 text-xl text-slate-400">
-			Your companion for League of Legends stats and lookup.
+			Your companion for League of Legends stats and lookup.🔥
 		</p>
 
 		<a
