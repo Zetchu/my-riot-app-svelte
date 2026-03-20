@@ -65,7 +65,7 @@
 					</div>
 				</div>
 				<button
-					class="bg-kinetic-gradient text-on-primary-fixed font-display rounded px-4 py-2 font-bold"
+					class="rounded bg-kinetic-gradient px-4 py-2 font-display font-bold text-on-primary-fixed"
 					>Search</button
 				>
 			</form>
