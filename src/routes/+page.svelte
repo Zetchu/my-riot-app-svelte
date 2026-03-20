@@ -12,14 +12,7 @@
 			>
 		</h1>
 		<p class="mb-8 text-xl text-slate-400">
-			Your companion for League of Legends stats and lookup.🔥
+			Your companion for League of Legends stats and lookup.🔥🔥🔥🔥🔥🔥
 		</p>
-
-		<a
-			href="/player"
-			class="inline-block rounded-lg bg-red-600 px-8 py-3 text-lg font-semibold text-white transition-colors hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-slate-900 focus:outline-none"
-		>
-			Enter
-		</a>
 	</div>
 </main>
