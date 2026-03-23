@@ -1,36 +1,34 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	// import { page } from '$app/stores';
 
 	let { children } = $props();
 
-	const sidebarLinks = [
-		{ name: 'Overview', href: '/', icon: 'grid' },
-		{ name: 'Live Game', href: '/', icon: 'wifi' },
-		{ name: 'Match History', href: '/', icon: 'history' },
-		{ name: 'Tilt Analytics', href: '/', icon: 'activity' }
-	];
+	// const sidebarLinks = [
+	// 	{ name: 'Overview', href: '/', icon: 'grid' },
+	// 	{ name: 'Live Game', href: '/', icon: 'wifi' },
+	// 	{ name: 'Match History', href: '/', icon: 'history' },
+	// 	{ name: 'Tilt Analytics', href: '/', icon: 'activity' }
+	// ];
 
-	// Helper to check active state
-	function isActive(href: string) {
-		if (href === '/' && $page.url.pathname === '/') return true;
-		if (href !== '/' && $page.url.pathname.startsWith(href)) return true;
-		return false;
-	}
+	// // Helper to check active state
+	// function isActive(href: string) {
+	// 	if (href === '/' && $page.url.pathname === '/') return true;
+	// 	if (href !== '/' && $page.url.pathname.startsWith(href)) return true;
+	// 	return false;
+	// }
 </script>
 
+<!--
 <div class="flex h-full min-h-[calc(100vh-5rem)]">
-	<!-- Sidebar -->
 	<aside
 		class="flex w-64 shrink-0 flex-col justify-between border-r border-surface-variant/20 bg-surface-low"
 	>
 		<div>
-			<!-- Profile Card -->
 			<div class="p-6">
 				<div class="flex items-center gap-3">
 					<div
 						class="flex h-10 w-10 items-center justify-center rounded border border-surface-variant/20 bg-surface-high shadow-sm"
 					>
-						<!-- Trophy Icon -->
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							class="h-5 w-5 text-secondary"
@@ -53,18 +51,16 @@
 				</div>
 			</div>
 
-			<!-- Navigation -->
 			<nav class="space-y-1 px-3">
-				{#each sidebarLinks as link}
+				{#each sidebarLinks as link (link.name)}
 					<a
-						href="/"
+						href={link.href}
 						class="group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors duration-200 {isActive(
 							link.href
 						)
 							? 'bg-surface-variant/30 text-primary'
 							: 'text-on-surface-variant hover:bg-surface-high hover:text-white'}"
 					>
-						<!-- Icons -->
 						{#if link.icon === 'grid'}
 							<svg
 								xmlns="http://www.w3.org/2000/svg"
@@ -148,7 +144,6 @@
 			</nav>
 		</div>
 
-		<!-- Footer Actions -->
 		<div class="space-y-6 p-6">
 			<button
 				class="w-full rounded-md bg-linear-to-r from-primary-container to-primary px-4 py-3 text-xs font-bold tracking-wider text-on-primary-fixed uppercase shadow-lg transition-all duration-300 hover:from-primary hover:to-primary-container hover:shadow-primary/20"
@@ -158,7 +153,7 @@
 
 			<div class="space-y-1 border-t border-surface-variant/10 pt-4">
 				<a
-					href="/"
+					href="/support"
 					class="group flex items-center gap-3 rounded-md px-2 py-2 text-sm text-on-surface-variant transition-colors hover:bg-surface-high hover:text-white"
 				>
 					<svg
@@ -200,9 +195,12 @@
 		</div>
 	</aside>
 
-	<!-- Main Content Area -->
 	<main class="flex-1 overflow-auto bg-surface-lowest p-8">
-		<!-- Render current page content -->
 		{@render children()}
 	</main>
 </div>
+-->
+
+<main class="flex-1 overflow-auto bg-surface-lowest p-8">
+	{@render children()}
+</main>

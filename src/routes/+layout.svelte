@@ -5,10 +5,10 @@
 	let { children } = $props();
 
 	const navItems = [
-		{ name: 'DASHBOARD', href: '/dashboard' },
-		{ name: 'LIVE SCOUT', href: '/scout' },
-		{ name: 'PRO ANALYTICS', href: '/analytics' },
-		{ name: 'MASTERY', href: '/mastery' }
+		{ name: 'DASHBOARD', href: '/' },
+		{ name: 'LIVE SCOUT', href: '/' },
+		{ name: 'PRO ANALYTICS', href: '/' },
+		{ name: 'MASTERY', href: '/' }
 	];
 </script>
 
@@ -34,7 +34,7 @@
 
 			<!-- Nav Links -->
 			<div class="hidden md:flex md:gap-x-8">
-				{#each navItems as item}
+				{#each navItems as item (item.name)}
 					<a
 						href={item.href}
 						class="text-xs font-bold tracking-wider text-on-surface-variant uppercase transition-colors duration-200 hover:text-primary"
@@ -56,7 +56,7 @@
 	</nav>
 
 	<!-- Main Content -->
-	<main class="flex-grow">
+	<main class="grow">
 		{@render children()}
 	</main>
 
@@ -69,9 +69,9 @@
 				</p>
 			</div>
 			<div class="flex justify-center space-x-6 md:order-2">
-				{#each ['Privacy Policy', 'Terms of Service', 'API Status', 'Support'] as item}
+				{#each ['Privacy Policy', 'Terms of Service', 'API Status', 'Support'] as item (item)}
 					<a
-						href="#"
+						href="/"
 						class="text-xs tracking-wider text-on-surface-variant uppercase transition-colors duration-200 hover:text-primary"
 					>
 						{item}
