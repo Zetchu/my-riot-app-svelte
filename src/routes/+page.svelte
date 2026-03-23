@@ -16,7 +16,7 @@
 
 	<!-- Hero Section -->
 	<div class="mx-auto max-w-7xl px-6 pt-10 pb-24 sm:pb-32 lg:flex lg:px-8">
-		<div class="mx-auto max-w-2xl lg:mx-0 lg:max-w-xl lg:flex-shrink-0">
+		<div class="mx-auto max-w-2xl lg:mx-0 lg:max-w-xl lg:shrink-0">
 			<div class="mt-24 sm:mt-32 lg:mt-16">
 				<a href="/" class="inline-flex space-x-6">
 					<span
@@ -41,7 +41,7 @@
 			<div class="mt-10 flex items-center gap-x-6">
 				<a
 					href="/"
-					class="rounded-sm bg-primary-container px-8 py-3.5 text-sm font-semibold tracking-wider text-on-primary-fixed uppercase shadow-sm transition-all duration-300 hover:bg-primary hover:text-surface-lowest focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+					class="rounded-sm bg-primary-container px-8 py-3.5 text-sm font-semibold tracking-wider text-on-primary-fixed uppercase shadow-sm transition-all duration-300 hover:bg-primary hover:text-surface-lowest focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-primary"
 				>
 					Start Tracking
 				</a>
@@ -216,7 +216,7 @@
 				<h2 class="font-display text-3xl font-bold tracking-tight text-white uppercase sm:text-4xl">
 					Precision <span class="bg-kinetic-gradient bg-clip-text text-transparent">Modules</span>
 				</h2>
-				<div class="mt-4 h-1 w-20 bg-gradient-to-r from-primary to-transparent"></div>
+				<div class="mt-4 h-1 w-20 bg-linear-to-r from-primary to-transparent"></div>
 			</div>
 			<div
 				class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-6 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3"
@@ -338,7 +338,7 @@
 					class="w-full rounded-sm border-0 bg-surface-container/50 px-4 py-3.5 text-on-surface shadow-sm ring-1 ring-white/10 ring-inset placeholder:text-on-surface-variant/50 focus:ring-2 focus:ring-primary focus:ring-inset sm:text-sm sm:leading-6"
 				/>
 				<button
-					class="w-full flex-none rounded-sm bg-primary-container px-8 py-3.5 text-sm font-bold tracking-wider text-on-primary-fixed uppercase shadow-sm transition-all duration-300 hover:bg-primary hover:text-surface-lowest focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:w-auto"
+					class="w-full flex-none rounded-sm bg-primary-container px-8 py-3.5 text-sm font-bold tracking-wider text-on-primary-fixed uppercase shadow-sm transition-all duration-300 hover:bg-primary hover:text-surface-lowest focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-primary sm:w-auto"
 				>
 					Unleash Kinetic
 				</button>
