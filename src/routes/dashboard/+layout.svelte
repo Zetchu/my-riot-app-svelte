@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { summonerStore } from '$lib/stores/summoner';
 
 	let { children } = $props();
 
@@ -49,9 +50,11 @@
 						</svg>
 					</div>
 					<div>
-						<h3 class="font-display text-sm font-bold tracking-wide text-white">Challenger</h3>
+						<h3 class="font-display text-sm font-bold tracking-wide text-white">
+							{$summonerStore?.gameName || 'Summoner'}
+						</h3>
 						<p class="text-[10px] font-bold tracking-wider text-on-surface-variant uppercase">
-							1,240 LP
+							{$summonerStore?.tagLine || 'Not loaded'}
 						</p>
 					</div>
 				</div>

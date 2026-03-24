@@ -62,7 +62,7 @@
 			</p>
 			<div class="mt-10 flex items-center gap-x-6">
 				<a
-					href="/dashboard"
+					href="/start-tracking"
 					class="rounded-sm bg-primary-container px-8 py-3.5 text-sm font-semibold tracking-wider text-on-primary-fixed uppercase shadow-sm transition-all duration-300 hover:bg-primary hover:text-surface-lowest focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-primary"
 				>
 					Start Tracking
