@@ -1,24 +1,30 @@
 <script lang="ts">
-	// import { page } from '$app/stores';
+	import { page } from '$app/stores';
 
 	let { children } = $props();
 
-	// const sidebarLinks = [
-	// 	{ name: 'Overview', href: '/', icon: 'grid' },
-	// 	{ name: 'Live Game', href: '/', icon: 'wifi' },
-	// 	{ name: 'Match History', href: '/', icon: 'history' },
-	// 	{ name: 'Tilt Analytics', href: '/', icon: 'activity' }
-	// ];
+	const sidebarLinks = [
+		{ name: 'Overview', href: '/dashboard', icon: 'grid' },
+		// { name: 'Live Game', href: '/dashboard/live', icon: 'wifi' },
+		{ name: 'Match History', href: '/dashboard/history', icon: 'history' },
+		{ name: 'Tilt Analytics', href: '/dashboard/analytics', icon: 'activity' }
+	];
 
-	// // Helper to check active state
-	// function isActive(href: string) {
-	// 	if (href === '/' && $page.url.pathname === '/') return true;
-	// 	if (href !== '/' && $page.url.pathname.startsWith(href)) return true;
-	// 	return false;
-	// }
+	const iconPaths = {
+		grid: 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z',
+		wifi: 'M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0',
+		history: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
+		activity: 'M13 10V3L4 14h7v7l9-11h-7z'
+	};
+
+	// Helper to check active state
+	function isActive(href: string) {
+		if (href === '/dashboard' && $page.url.pathname === '/dashboard') return true;
+		if (href !== '/dashboard' && $page.url.pathname.startsWith(href)) return true;
+		return false;
+	}
 </script>
 
-<!--
 <div class="flex h-full min-h-[calc(100vh-5rem)]">
 	<aside
 		class="flex w-64 shrink-0 flex-col justify-between border-r border-surface-variant/20 bg-surface-low"
@@ -61,83 +67,24 @@
 							? 'bg-surface-variant/30 text-primary'
 							: 'text-on-surface-variant hover:bg-surface-high hover:text-white'}"
 					>
-						{#if link.icon === 'grid'}
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								class="h-2 w-2 opacity-70 transition-opacity group-hover:opacity-100 {isActive(
-									link.href
-								)
-									? 'opacity-100'
-									: ''}"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-								stroke-width="2"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
-								/>
-							</svg>
-						{:else if link.icon === 'wifi'}
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								class="h-2 w-2 opacity-70 transition-opacity group-hover:opacity-100 {isActive(
-									link.href
-								)
-									? 'opacity-100'
-									: ''}"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-								stroke-width="2"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0"
-								/>
-							</svg>
-						{:else if link.icon === 'history'}
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								class="h-2 w-2 opacity-70 transition-opacity group-hover:opacity-100 {isActive(
-									link.href
-								)
-									? 'opacity-100'
-									: ''}"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-								stroke-width="2"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-								/>
-							</svg>
-						{:else if link.icon === 'activity'}
-							<svg
-								xmlns="http://www.w3.org/2000/svg"
-								class="h-2 w-2 opacity-70 transition-opacity group-hover:opacity-100 {isActive(
-									link.href
-								)
-									? 'opacity-100'
-									: ''}"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-								stroke-width="2"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									d="M13 10V3L4 14h7v7l9-11h-7z"
-								/>
-							</svg>
-						{/if}
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							class="h-5 w-5 opacity-70 transition-opacity group-hover:opacity-100 {isActive(
+								link.href
+							)
+								? 'opacity-100'
+								: ''}"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+							stroke-width="2"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								d={iconPaths[link.icon as keyof typeof iconPaths]}
+							/>
+						</svg>
 						<span>{link.name}</span>
 					</a>
 				{/each}
@@ -158,7 +105,7 @@
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
-						class="h-2 w-2 opacity-50 transition-opacity group-hover:opacity-100"
+						class="h-5 w-5 opacity-50 transition-opacity group-hover:opacity-100"
 						fill="none"
 						viewBox="0 0 24 24"
 						stroke="currentColor"
@@ -177,7 +124,7 @@
 				>
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
-						class="h-2 w-2 opacity-50 transition-opacity group-hover:opacity-100"
+						class="h-5 w-5 opacity-50 transition-opacity group-hover:opacity-100"
 						fill="none"
 						viewBox="0 0 24 24"
 						stroke="currentColor"
@@ -199,8 +146,3 @@
 		{@render children()}
 	</main>
 </div>
--->
-
-<main class="flex-1 overflow-auto bg-surface-lowest p-8">
-	{@render children()}
-</main>

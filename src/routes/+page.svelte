@@ -1,5 +1,27 @@
 <script>
-	// No script needed for this static landing page
+	const modules = [
+		{
+			title: 'Tilt Velocity',
+			description:
+				'Real-time biometric and performance analysis that detects when your decision-making is slowing down before you even notice.',
+			icon: 'M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z',
+			color: 'primary'
+		},
+		{
+			title: 'Live Scouting',
+			description:
+				'Advanced opponent behavioral patterns. Know which lane is likely to tilt first and where the mechanical cracks are in their armor.',
+			icon: 'M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59',
+			color: 'secondary'
+		},
+		{
+			title: 'Pro Analytics',
+			description:
+				'Post-game breakdowns that ignore the stats and focus on your mental endurance. Track your "Zen Recovery" after tough losses.',
+			icon: 'M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z',
+			color: 'orange-500'
+		}
+	];
 </script>
 
 <div class="relative isolate overflow-hidden">
@@ -40,7 +62,7 @@
 			</p>
 			<div class="mt-10 flex items-center gap-x-6">
 				<a
-					href="/"
+					href="/dashboard"
 					class="rounded-sm bg-primary-container px-8 py-3.5 text-sm font-semibold tracking-wider text-on-primary-fixed uppercase shadow-sm transition-all duration-300 hover:bg-primary hover:text-surface-lowest focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-primary"
 				>
 					Start Tracking
@@ -221,98 +243,34 @@
 			<div
 				class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-6 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3"
 			>
-				<!-- Module 1: Tilt Velocity -->
-				<div
-					class="flex flex-col justify-between rounded-sm bg-surface-low p-8 ring-1 ring-white/5 transition hover:bg-surface-high"
-				>
-					<div>
-						<div class="mb-6 inline-flex rounded-lg bg-primary/10 p-3 ring-1 ring-primary/20">
-							<svg
-								class="h-6 w-6 text-primary"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke-width="1.5"
-								stroke="currentColor"
+				{#each modules as module (module.title)}
+					<div
+						class="flex flex-col justify-between rounded-sm bg-surface-low p-8 ring-1 ring-white/5 transition hover:bg-surface-high"
+					>
+						<div>
+							<div
+								class="mb-6 inline-flex rounded-lg bg-{module.color}/10 p-3 ring-1 ring-{module.color}/20"
 							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-								/>
-							</svg>
+								<svg
+									class="h-6 w-6 text-{module.color}"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke-width="1.5"
+									stroke="currentColor"
+								>
+									<path stroke-linecap="round" stroke-linejoin="round" d={module.icon} />
+								</svg>
+							</div>
+							<h3 class="font-display text-lg leading-8 font-bold text-white">{module.title}</h3>
+							<p class="mt-2 text-sm leading-7 text-on-surface-variant">
+								{module.description}
+							</p>
 						</div>
-						<h3 class="font-display text-lg leading-8 font-bold text-white">Tilt Velocity</h3>
-						<p class="mt-2 text-sm leading-7 text-on-surface-variant">
-							Real-time biometric and performance analysis that detects when your decision-making is
-							slowing down before you even notice.
-						</p>
-					</div>
-					<div class="mt-8 h-1 w-full overflow-hidden rounded-full bg-surface-variant">
-						<div class="h-full w-1/3 bg-primary"></div>
-					</div>
-				</div>
-
-				<!-- Module 2: Live Scouting -->
-				<div
-					class="flex flex-col justify-between rounded-sm bg-surface-low p-8 ring-1 ring-white/5 transition hover:bg-surface-high"
-				>
-					<div>
-						<div class="mb-6 inline-flex rounded-lg bg-secondary/10 p-3 ring-1 ring-secondary/20">
-							<svg
-								class="h-6 w-6 text-secondary"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke-width="1.5"
-								stroke="currentColor"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672ZM12 2.25V4.5m5.834.166-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243-1.59-1.59"
-								/>
-							</svg>
+						<div class="mt-8 h-1 w-full overflow-hidden rounded-full bg-surface-variant">
+							<div class="h-full w-1/3 bg-{module.color}"></div>
 						</div>
-						<h3 class="font-display text-lg leading-8 font-bold text-white">Live Scouting</h3>
-						<p class="mt-2 text-sm leading-7 text-on-surface-variant">
-							Advanced opponent behavioral patterns. Know which lane is likely to tilt first and
-							where the mechanical cracks are in their armor.
-						</p>
 					</div>
-					<div class="mt-8 h-1 w-full overflow-hidden rounded-full bg-surface-variant">
-						<div class="h-full w-1/3 bg-secondary"></div>
-					</div>
-				</div>
-
-				<!-- Module 3: Pro Analytics -->
-				<div
-					class="flex flex-col justify-between rounded-sm bg-surface-low p-8 ring-1 ring-white/5 transition hover:bg-surface-high"
-				>
-					<div>
-						<div class="mb-6 inline-flex rounded-lg bg-orange-500/10 p-3 ring-1 ring-orange-500/20">
-							<svg
-								class="h-6 w-6 text-orange-500"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke-width="1.5"
-								stroke="currentColor"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"
-								/>
-							</svg>
-						</div>
-						<h3 class="font-display text-lg leading-8 font-bold text-white">Pro Analytics</h3>
-						<p class="mt-2 text-sm leading-7 text-on-surface-variant">
-							Post-game breakdowns that ignore the stats and focus on your mental endurance. Track
-							your "Zen Recovery" after tough losses.
-						</p>
-					</div>
-					<div class="mt-8 h-1 w-full overflow-hidden rounded-full bg-surface-variant">
-						<div class="h-full w-1/3 bg-orange-500"></div>
-					</div>
-				</div>
+				{/each}
 			</div>
 		</div>
 	</div>
