@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { summonerStore } from '$lib/stores/summoner';
 
 	let gameName = '';
@@ -39,11 +38,8 @@
 				tagLine,
 				puuid: playerData.puuid
 			});
-			console.log('Summoner stored, navigating to dashboard...');
-
-			// Redirect to dashboard
-			await goto('/dashboard');
-			console.log('Navigation complete');
+			console.log('Summoner stored');
+			loading = false;
 		} catch (err) {
 			error = 'Failed to load summoner data. Please try again.';
 			console.error('Catch error:', err);
@@ -70,8 +66,7 @@
 			<div class="space-y-8">
 				<!-- Header -->
 				<div class="space-y-3">
-					<!-- svelte-ignore a11y_consider_explicit_label -->
-					<a href="/" class="inline-block">
+					<div class="inline-block">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							class="h-6 w-6 text-primary"
@@ -84,7 +79,7 @@
 								clip-rule="evenodd"
 							/>
 						</svg>
-					</a>
+					</div>
 					<h1 class="font-display text-4xl font-bold tracking-tight text-white">
 						Find Your <span class="bg-kinetic-gradient bg-clip-text text-transparent">Summoner</span
 						>
