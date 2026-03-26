@@ -1,9 +1,19 @@
-import { writable } from 'svelte/store';
-
 export interface SummonerData {
+	// Core Identity
+	puuid: string;
 	gameName: string;
 	tagLine: string;
-	puuid: string;
+
+	// Profile Info
+	summonerLevel: number;
+	profileIconId: number;
+
+	// Ranked Stats
+	tier: string;
+	rank: string;
+	leaguePoints: number;
+	wins: number;
+	losses: number;
 }
 
 // Create a reactive class

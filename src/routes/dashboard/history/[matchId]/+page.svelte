@@ -1,32 +1,11 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { selectedMatchStore } from '$lib/stores/match.svelte';
+	import { selectedMatchStore, type Participant } from '$lib/stores/match.svelte';
 
-	interface Participant {
-		puuid: string;
-		championName: string;
-		kills: number;
-		deaths: number;
-		assists: number;
-		win: boolean;
-		totalMinionsKilled: number;
-		neutralMinionsKilled: number;
-		visionScore: number;
-		goldEarned: number;
-		totalDamageDealtToChampions: number;
-		summonerName: string;
-		teamPosition: string; // Added teamPosition for role sorting
-	}
-
-	// ✅ CORRECT (Svelte 5 Runes):
-	// Create a reactive alias to your store's value
 	let match = $derived(selectedMatchStore.value);
-
-	// Automatically recalculate loading whenever 'match' changes
 	let loading = $derived(!match);
-
-	// Use $state in case you want to set an error message later (e.g., error = 'Fetch failed')
 	let error = $state('');
+
 	function formatDuration(seconds: number): string {
 		const minutes = Math.floor(seconds / 60);
 		const secs = seconds % 60;
@@ -63,7 +42,6 @@
 </script>
 
 <div class="space-y-6">
-	<!-- Header -->
 	<div class="flex items-center justify-between">
 		<div class="space-y-2">
 			<h1 class="font-display text-3xl font-bold tracking-tight text-white uppercase">
@@ -85,7 +63,6 @@
 	</div>
 
 	{#if !match}
-		<!-- Loading State -->
 		<div class="rounded-lg bg-surface-high/30 p-8 text-center">
 			<div class="inline-block animate-spin">
 				<svg
@@ -106,27 +83,63 @@
 			<p class="mt-4 text-on-surface-variant">Loading match details...</p>
 		</div>
 	{:else}
-		<!-- Blue Team -->
 		<div class="space-y-3">
 			<h2 class="font-display text-xl font-bold tracking-tight text-blue-400">Blue Team</h2>
 			<div class="space-y-2">
 				{#each sortByRole(getTeamParticipants(100)) as participant (participant.puuid)}
 					<div class="rounded-lg bg-surface-high p-4">
 						<div class="flex items-center justify-between">
-							<div class="flex items-center gap-3">
-								<div class="w-20 text-sm font-bold text-white">{participant.championName}</div>
-								<div class="space-y-1">
-									<div class="text-xs font-semibold text-on-surface-variant uppercase">
-										{participant.summonerName}
+							<div class="flex items-center gap-4">
+								<div class="flex w-50 shrink-0 items-center gap-3">
+									<div
+										class="h-10 w-10 shrink-0 overflow-hidden rounded-md bg-surface-lowest ring-1 ring-surface-variant/30"
+									>
+										<img
+											src={`https://ddragon.leagueoflegends.com/cdn/16.6.1/img/champion/${participant.championName}.png`}
+											alt={participant.championName}
+											class="h-full w-full scale-110 object-cover"
+											loading="lazy"
+										/>
 									</div>
-									<div class="text-xs text-on-surface-variant">
-										{participant.teamPosition}
+									<div class="w-full space-y-1 overflow-hidden">
+										<div
+											class="truncate text-sm font-bold text-white"
+											title={`${participant.riotIdGameName || participant.summonerName || 'Unknown Player'}${participant.riotIdTagline ? '#' + participant.riotIdTagline : ''}`}
+										>
+											{participant.riotIdGameName || participant.summonerName || 'Unknown Player'}
+											{#if participant.riotIdTagline}
+												<span class="text-xs font-normal text-on-surface-variant"
+													>#{participant.riotIdTagline}</span
+												>
+											{/if}
+										</div>
+										<div class="text-xs text-on-surface-variant">
+											{participant.teamPosition}
+										</div>
 									</div>
+								</div>
+
+								<div class="flex shrink-0 gap-1">
+									{#each participant.items || [] as itemId, index (index)}
+										<div
+											class={`flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-sm 
+                                            ${index === 6 ? 'ml-2 rounded-full' : ''} 
+                                            ${itemId === 0 ? 'bg-surface-lowest/30 ring-1 ring-white/5' : 'bg-surface-container-highest ring-1 ring-surface-variant/30'}`}
+										>
+											{#if itemId > 0}
+												<img
+													src={`https://ddragon.leagueoflegends.com/cdn/16.6.1/img/item/${itemId}.png`}
+													alt={`Item ${itemId}`}
+													class="h-full w-full object-cover"
+													loading="lazy"
+												/>
+											{/if}
+										</div>
+									{/each}
 								</div>
 							</div>
 
 							<div class="flex items-center gap-8">
-								<!-- KDA -->
 								<div class="text-right">
 									<div class="text-sm font-bold text-white">
 										{participant.kills}/{participant.deaths}/{participant.assists}
@@ -139,7 +152,6 @@
 									</div>
 								</div>
 
-								<!-- CS -->
 								<div class="text-right">
 									<div class="text-sm font-bold text-white">
 										{formatNumber(
@@ -149,7 +161,6 @@
 									<div class="text-xs text-on-surface-variant">CS</div>
 								</div>
 
-								<!-- Gold -->
 								<div class="text-right">
 									<div class="text-sm font-bold text-yellow-400">
 										{formatNumber(Math.floor(participant.goldEarned / 1000))}k
@@ -157,7 +168,6 @@
 									<div class="text-xs text-on-surface-variant">Gold</div>
 								</div>
 
-								<!-- Damage -->
 								<div class="text-right">
 									<div class="text-sm font-bold text-red-400">
 										{formatNumber(
@@ -167,7 +177,6 @@
 									<div class="text-xs text-on-surface-variant">Damage</div>
 								</div>
 
-								<!-- Vision -->
 								<div class="text-right">
 									<div class="text-sm font-bold text-white">
 										{participant.visionScore}
@@ -181,30 +190,65 @@
 			</div>
 		</div>
 
-		<!-- Divider -->
-		<div class="border-t border-surface-variant/20"></div>
+		<div class="my-4 border-t border-surface-variant/20"></div>
 
-		<!-- Red Team -->
 		<div class="space-y-3">
 			<h2 class="font-display text-xl font-bold tracking-tight text-red-400">Red Team</h2>
 			<div class="space-y-2">
 				{#each sortByRole(getTeamParticipants(200)) as participant (participant.puuid)}
 					<div class="rounded-lg bg-surface-high p-4">
 						<div class="flex items-center justify-between">
-							<div class="flex items-center gap-3">
-								<div class="w-20 text-sm font-bold text-white">{participant.championName}</div>
-								<div class="space-y-1">
-									<div class="text-xs font-semibold text-on-surface-variant uppercase">
-										{participant.summonerName}
+							<div class="flex items-center gap-4">
+								<div class="flex w-50 shrink-0 items-center gap-3">
+									<div
+										class="h-10 w-10 shrink-0 overflow-hidden rounded-md bg-surface-lowest ring-1 ring-surface-variant/30"
+									>
+										<img
+											src={`https://ddragon.leagueoflegends.com/cdn/16.6.1/img/champion/${participant.championName}.png`}
+											alt={participant.championName}
+											class="h-full w-full scale-110 object-cover"
+											loading="lazy"
+										/>
 									</div>
-									<div class="text-xs text-on-surface-variant">
-										{participant.teamPosition}
+									<div class="w-full space-y-1 overflow-hidden">
+										<div
+											class="truncate text-sm font-bold text-white"
+											title={`${participant.riotIdGameName || participant.summonerName || 'Unknown Player'}${participant.riotIdTagline ? '#' + participant.riotIdTagline : ''}`}
+										>
+											{participant.riotIdGameName || participant.summonerName || 'Unknown Player'}
+											{#if participant.riotIdTagline}
+												<span class="text-xs font-normal text-on-surface-variant"
+													>#{participant.riotIdTagline}</span
+												>
+											{/if}
+										</div>
+										<div class="text-xs text-on-surface-variant">
+											{participant.teamPosition}
+										</div>
 									</div>
+								</div>
+
+								<div class="flex shrink-0 gap-1">
+									{#each participant.items || [] as itemId, index (index)}
+										<div
+											class={`flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-sm 
+                                            ${index === 6 ? 'ml-2 rounded-full' : ''} 
+                                            ${itemId === 0 ? 'bg-surface-lowest/30 ring-1 ring-white/5' : 'bg-surface-container-highest ring-1 ring-surface-variant/30'}`}
+										>
+											{#if itemId > 0}
+												<img
+													src={`https://ddragon.leagueoflegends.com/cdn/16.6.1/img/item/${itemId}.png`}
+													alt={`Item ${itemId}`}
+													class="h-full w-full object-cover"
+													loading="lazy"
+												/>
+											{/if}
+										</div>
+									{/each}
 								</div>
 							</div>
 
 							<div class="flex items-center gap-8">
-								<!-- KDA -->
 								<div class="text-right">
 									<div class="text-sm font-bold text-white">
 										{participant.kills}/{participant.deaths}/{participant.assists}
@@ -217,7 +261,6 @@
 									</div>
 								</div>
 
-								<!-- CS -->
 								<div class="text-right">
 									<div class="text-sm font-bold text-white">
 										{formatNumber(
@@ -227,7 +270,6 @@
 									<div class="text-xs text-on-surface-variant">CS</div>
 								</div>
 
-								<!-- Gold -->
 								<div class="text-right">
 									<div class="text-sm font-bold text-yellow-400">
 										{formatNumber(Math.floor(participant.goldEarned / 1000))}k
@@ -235,7 +277,6 @@
 									<div class="text-xs text-on-surface-variant">Gold</div>
 								</div>
 
-								<!-- Damage -->
 								<div class="text-right">
 									<div class="text-sm font-bold text-red-400">
 										{formatNumber(
@@ -245,7 +286,6 @@
 									<div class="text-xs text-on-surface-variant">Damage</div>
 								</div>
 
-								<!-- Vision -->
 								<div class="text-right">
 									<div class="text-sm font-bold text-white">
 										{participant.visionScore}

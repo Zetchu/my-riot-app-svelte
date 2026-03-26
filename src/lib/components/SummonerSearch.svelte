@@ -34,9 +34,16 @@
 
 			// Store the summoner data
 			summonerStore.value = {
-				gameName,
-				tagLine,
-				puuid: playerData.puuid
+				puuid: playerData.puuid,
+				gameName: playerData.gameName,
+				tagLine: playerData.tagLine,
+				summonerLevel: playerData.summonerLevel,
+				profileIconId: playerData.profileIconId,
+				tier: playerData.tier,
+				rank: playerData.rank,
+				leaguePoints: playerData.leaguePoints,
+				wins: playerData.wins,
+				losses: playerData.losses
 			};
 			console.log('Summoner stored');
 			loading = false;

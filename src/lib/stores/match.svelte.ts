@@ -13,7 +13,14 @@ export interface Participant {
 	goldEarned: number;
 	totalDamageDealtToChampions: number;
 	summonerName: string;
-	teamPosition: string; // Added teamPosition for role sorting
+	riotIdGameName: string; // NEW
+	riotIdTagline: string;
+	teamPosition: string;
+	items: number[];
+	summoner1Id: number;
+	summoner2Id: number;
+	primaryRune: number | null;
+	secondaryStyle: number | null;
 }
 
 export interface MatchDetail {

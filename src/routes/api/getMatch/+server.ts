@@ -20,6 +20,8 @@ export async function GET({ url }) {
 		const participants = match.info.participants.map((p: any) => ({
 			puuid: p.puuid,
 			summonerName: p.summonerName,
+			riotIdGameName: p.riotIdGameName, // NEW
+			riotIdTagline: p.riotIdTagline,
 			championName: p.championName,
 			teamPosition: p.teamPosition, // Replaces role/lane
 			win: p.win,
