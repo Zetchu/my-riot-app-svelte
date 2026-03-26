@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { summonerStore } from '$lib/stores/summoner';
+	import { summonerStore } from '$lib/stores/summoner.svelte';
 
 	let gameName = '';
 	let tagLine = '';
@@ -34,11 +34,11 @@
 			console.log('Player data received:', playerData);
 
 			// Store the summoner data
-			summonerStore.set({
+			summonerStore.value = {
 				gameName,
 				tagLine,
 				puuid: playerData.puuid
-			});
+			};
 			console.log('Summoner stored, navigating to dashboard...');
 
 			// Redirect to dashboard

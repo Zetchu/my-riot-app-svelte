@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { summonerStore } from '$lib/stores/summoner';
+	import { summonerStore } from '$lib/stores/summoner.svelte';
 	import SummonerSearch from '$lib/components/SummonerSearch.svelte';
 
 	let { children } = $props();
@@ -27,7 +27,7 @@
 	}
 </script>
 
-{#if !$summonerStore?.puuid}
+{#if !summonerStore.value?.puuid}
 	<SummonerSearch />
 {:else}
 	<div class="flex h-full min-h-[calc(100vh-5rem)]">
@@ -55,10 +55,10 @@
 						</div>
 						<div>
 							<h3 class="font-display text-sm font-bold tracking-wide text-white">
-								{$summonerStore?.gameName || 'Summoner'}
+								{summonerStore.value?.gameName || 'Summoner'}
 							</h3>
 							<p class="text-[10px] font-bold tracking-wider text-on-surface-variant uppercase">
-								{$summonerStore?.tagLine || 'Not loaded'}
+								{summonerStore.value?.tagLine || 'Not loaded'}
 							</p>
 						</div>
 					</div>

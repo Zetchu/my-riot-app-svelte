@@ -19,19 +19,36 @@ export async function GET({ url }) {
 		// Extract all 10 participants with their stats
 		const participants = match.info.participants.map((p: any) => ({
 			puuid: p.puuid,
+			summonerName: p.summonerName,
 			championName: p.championName,
+			teamPosition: p.teamPosition, // Replaces role/lane
+			win: p.win,
+
+			// KDA & Combat
 			kills: p.kills,
 			deaths: p.deaths,
 			assists: p.assists,
-			win: p.win,
+			totalDamageDealtToChampions: p.totalDamageDealtToChampions,
+
+			// Econ & Vision
 			totalMinionsKilled: p.totalMinionsKilled,
 			neutralMinionsKilled: p.neutralMinionsKilled,
-			visionScore: p.visionScore,
 			goldEarned: p.goldEarned,
-			damageDealtToChampions: p.damageDealtToChampions,
-			summonerName: p.summonerName,
-			lane: p.lane,
-			role: p.role
+			visionScore: p.visionScore,
+
+			// --- NEW DATA BELOW ---
+
+			// Grouping items 0-6 into an array (item6 is the vision trinket)
+			items: [p.item0, p.item1, p.item2, p.item3, p.item4, p.item5, p.item6],
+
+			// Summoner Spells (e.g., Flash, Ignite)
+			summoner1Id: p.summoner1Id,
+			summoner2Id: p.summoner2Id,
+
+			// Runes (Perks)
+			// We drill down to get the primary Keystone ID and the Secondary Tree ID
+			primaryRune: p.perks?.styles?.[0]?.selections?.[0]?.perk || null,
+			secondaryStyle: p.perks?.styles?.[1]?.style || null
 		}));
 
 		return json({

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import { summonerStore } from '$lib/stores/summoner';
-	import { selectedMatchStore } from '$lib/stores/match';
+	import { summonerStore } from '$lib/stores/summoner.svelte';
+	import { selectedMatchStore } from '$lib/stores/match.svelte';
 
 	interface MatchSummary {
 		matchId: string;
@@ -16,21 +16,19 @@
 		visionScore: number;
 	}
 
-	let matches: MatchSummary[] = [];
-	let loading = $state();
-	let error = '';
+	let matches = $state<MatchSummary[]>([]);
+	let loading = $state(false);
+	let error = $state('');
 
 	async function loadMatches() {
-		if (!$summonerStore?.puuid) {
+		if (!summonerStore.value?.puuid) {
 			error = 'Summoner data not found. Please sync your summoner first.';
 			loading = false;
-			console.log(loading, 'puuid missing');
-
 			return;
 		}
 
 		try {
-			const response = await fetch(`/api/getMatches?puuid=${$summonerStore.puuid}`);
+			const response = await fetch(`/api/getMatches?puuid=${summonerStore.value.puuid}`);
 			if (!response.ok) {
 				error = 'Failed to load matches';
 				loading = false;
@@ -60,7 +58,7 @@
 			}
 
 			const matchDetail = await response.json();
-			selectedMatchStore.set(matchDetail);
+			selectedMatchStore.value = matchDetail;
 			await goto(`/dashboard/history/${matchId}`);
 		} catch (err) {
 			error = 'Failed to load match details';
@@ -117,7 +115,7 @@
 		<div class="rounded-lg bg-red-500/10 p-6 ring-1 ring-red-500/20">
 			<p class="text-red-400">{error}</p>
 			<button
-				on:click={loadMatches}
+				onclick={loadMatches}
 				class="mt-4 rounded-sm bg-red-500/20 px-4 py-2 text-sm font-semibold text-red-400 transition hover:bg-red-500/30"
 			>
 				Try Again
@@ -133,7 +131,7 @@
 		<div class="space-y-3">
 			{#each matches as match (match.matchId)}
 				<button
-					on:click={() => handleMatchClick(match.matchId)}
+					onclick={() => handleMatchClick(match.matchId)}
 					class="w-full rounded-lg bg-surface-high p-4 transition hover:bg-surface-high/80"
 				>
 					<div class="flex items-center justify-between">

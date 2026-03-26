@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { summonerStore } from '$lib/stores/summoner';
+	import { summonerStore } from '$lib/stores/summoner.svelte';
 
-	let gameName = '';
-	let tagLine = '';
-	let loading = false;
-	let error = '';
+	let gameName = $state('');
+	let tagLine = $state('');
+	let loading = $state(false);
+	let error = $state('');
 
 	async function handleSubmit() {
 		if (!gameName.trim() || !tagLine.trim()) {
@@ -33,11 +33,11 @@
 			console.log('Player data received:', playerData);
 
 			// Store the summoner data
-			summonerStore.set({
+			summonerStore.value = {
 				gameName,
 				tagLine,
 				puuid: playerData.puuid
-			});
+			};
 			console.log('Summoner stored');
 			loading = false;
 		} catch (err) {

@@ -11,10 +11,9 @@ export interface Participant {
 	neutralMinionsKilled: number;
 	visionScore: number;
 	goldEarned: number;
-	damageDealtToChampions: number;
+	totalDamageDealtToChampions: number;
 	summonerName: string;
-	lane: string;
-	role: string;
+	teamPosition: string; // Added teamPosition for role sorting
 }
 
 export interface MatchDetail {
@@ -30,4 +29,8 @@ export interface MatchDetail {
 	}>;
 }
 
-export const selectedMatchStore = writable<MatchDetail | null>(null);
+class MatchState {
+	value = $state<MatchDetail | null>(null);
+}
+
+export const selectedMatchStore = new MatchState();

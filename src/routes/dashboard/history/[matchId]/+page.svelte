@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { selectedMatchStore } from '$lib/stores/match';
+	import { selectedMatchStore } from '$lib/stores/match.svelte';
 
 	interface Participant {
 		puuid: string;
@@ -13,16 +13,20 @@
 		neutralMinionsKilled: number;
 		visionScore: number;
 		goldEarned: number;
-		damageDealtToChampions: number;
+		totalDamageDealtToChampions: number;
 		summonerName: string;
-		lane: string;
-		role: string;
+		teamPosition: string; // Added teamPosition for role sorting
 	}
 
-	let match = $selectedMatchStore;
-	let loading = !match;
-	let error = '';
+	// ✅ CORRECT (Svelte 5 Runes):
+	// Create a reactive alias to your store's value
+	let match = $derived(selectedMatchStore.value);
 
+	// Automatically recalculate loading whenever 'match' changes
+	let loading = $derived(!match);
+
+	// Use $state in case you want to set an error message later (e.g., error = 'Fetch failed')
+	let error = $state('');
 	function formatDuration(seconds: number): string {
 		const minutes = Math.floor(seconds / 60);
 		const secs = seconds % 60;
@@ -53,7 +57,7 @@
 			UTILITY: 5
 		};
 		return [...participants].sort(
-			(a, b) => (roleOrder[a.role] || 999) - (roleOrder[b.role] || 999)
+			(a, b) => (roleOrder[a.teamPosition] || 999) - (roleOrder[b.teamPosition] || 999)
 		);
 	}
 </script>
@@ -73,7 +77,7 @@
 		</div>
 
 		<button
-			on:click={() => goto('/dashboard/history')}
+			onclick={() => goto('/dashboard/history')}
 			class="rounded-sm bg-surface-high px-4 py-2 text-sm font-semibold text-white transition hover:bg-surface-high/80"
 		>
 			← Back
@@ -116,7 +120,7 @@
 										{participant.summonerName}
 									</div>
 									<div class="text-xs text-on-surface-variant">
-										{participant.role} • {participant.lane}
+										{participant.teamPosition}
 									</div>
 								</div>
 							</div>
@@ -156,7 +160,9 @@
 								<!-- Damage -->
 								<div class="text-right">
 									<div class="text-sm font-bold text-red-400">
-										{formatNumber(Math.floor((participant.damageDealtToChampions || 0) / 1000))}k
+										{formatNumber(
+											Math.floor((participant.totalDamageDealtToChampions || 0) / 1000)
+										)}k
 									</div>
 									<div class="text-xs text-on-surface-variant">Damage</div>
 								</div>
@@ -192,7 +198,7 @@
 										{participant.summonerName}
 									</div>
 									<div class="text-xs text-on-surface-variant">
-										{participant.role} • {participant.lane}
+										{participant.teamPosition}
 									</div>
 								</div>
 							</div>
@@ -232,7 +238,9 @@
 								<!-- Damage -->
 								<div class="text-right">
 									<div class="text-sm font-bold text-red-400">
-										{formatNumber(Math.floor((participant.damageDealtToChampions || 0) / 1000))}k
+										{formatNumber(
+											Math.floor((participant.totalDamageDealtToChampions || 0) / 1000)
+										)}k
 									</div>
 									<div class="text-xs text-on-surface-variant">Damage</div>
 								</div>
