@@ -12,7 +12,7 @@ class SummonerState {
 				try {
 					this.#value = JSON.parse(stored);
 				} catch (e) {
-					console.error('Could not parse stored summoner data');
+					console.error('Could not parse stored summoner data', e);
 				}
 			}
 		}
