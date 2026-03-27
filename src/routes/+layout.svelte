@@ -56,7 +56,7 @@
 	</nav>
 
 	<!-- Main Content -->
-	<main class="grow">
+	<main class="min-h-0 grow">
 		{@render children()}
 	</main>
 
