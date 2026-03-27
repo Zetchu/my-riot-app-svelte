@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 	import { summonerStore } from '$lib/stores/summoner.svelte';
 	import SummonerSearch from '$lib/components/SummonerSearch.svelte';
 
