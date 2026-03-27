@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { summonerStore } from '$lib/stores/summoner.svelte';
+	import { goto } from '$app/navigation';
 
 	let gameName = $state('');
 	let tagLine = $state('');
@@ -47,6 +48,7 @@
 			};
 			console.log('Summoner stored');
 			loading = false;
+			await goto('/dashboard');
 		} catch (err) {
 			error = 'Failed to load summoner data. Please try again.';
 			console.error('Catch error:', err);
@@ -95,7 +97,13 @@
 				</div>
 
 				<!-- Form -->
-				<form on:submit|preventDefault={handleSubmit} class="space-y-6">
+				<form
+					onsubmit={(e) => {
+						e.preventDefault();
+						handleSubmit();
+					}}
+					class="space-y-6"
+				>
 					<!-- Summoner Name -->
 					<div class="space-y-2">
 						<label for="gameName" class="block text-sm font-semibold text-white"
