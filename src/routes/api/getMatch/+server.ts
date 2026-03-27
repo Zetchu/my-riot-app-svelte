@@ -1,5 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { RIOT_API_KEY } from '$env/static/private';
+import type { RiotParticipantDto } from '$lib/types';
 
 export async function GET({ url }) {
 	const matchId = url.searchParams.get('matchId');
@@ -17,7 +18,7 @@ export async function GET({ url }) {
 		const match = await matchRes.json();
 
 		// Extract all 10 participants with their stats
-		const participants = match.info.participants.map((p: any) => ({
+		const participants = match.info.participants.map((p: RiotParticipantDto) => ({
 			puuid: p.puuid,
 			summonerName: p.summonerName,
 			riotIdGameName: p.riotIdGameName, // NEW

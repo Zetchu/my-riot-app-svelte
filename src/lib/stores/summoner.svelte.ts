@@ -1,20 +1,4 @@
-export interface SummonerData {
-	// Core Identity
-	puuid: string;
-	gameName: string;
-	tagLine: string;
-
-	// Profile Info
-	summonerLevel: number;
-	profileIconId: number;
-
-	// Ranked Stats
-	tier: string;
-	rank: string;
-	leaguePoints: number;
-	wins: number;
-	losses: number;
-}
+import type { SummonerData } from '$lib/types';
 
 // Create a reactive class
 class SummonerState {

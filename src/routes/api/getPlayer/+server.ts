@@ -1,5 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { RIOT_API_KEY } from '$env/static/private';
+import type { LeagueEntry } from '$lib/types';
 
 export async function GET({ url }) {
 	const gameName = url.searchParams.get('gameName');
@@ -47,7 +48,7 @@ export async function GET({ url }) {
 		// Safety check for League data, just in case they are unranked
 		if (leagueRes.ok) {
 			const leagueData = await leagueRes.json();
-			soloQueue = leagueData.find((queue: any) => queue.queueType === 'RANKED_SOLO_5x5');
+			soloQueue = leagueData.find((queue: LeagueEntry) => queue.queueType === 'RANKED_SOLO_5x5');
 		}
 
 		// --- Assemble the Final Payload ---

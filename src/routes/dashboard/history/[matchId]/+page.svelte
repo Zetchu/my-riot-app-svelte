@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { selectedMatchStore, type Participant } from '$lib/stores/match.svelte';
+	import { selectedMatchStore } from '$lib/stores/match.svelte';
+	import type { Participant } from '$lib/types';
 
 	let match = $derived(selectedMatchStore.value);
 	let loading = $derived(!match);
@@ -20,7 +21,7 @@
 		if (!match) return [];
 		return match.participants.filter((p: Participant) => {
 			// Determine team from win status (team 100 = blue, team 200 = red)
-			const playerTeam = match.teams.find((t: any) =>
+			const playerTeam = match.teams.find((t: { teamId: number; win: boolean }) =>
 				t.teamId === 100 ? p.win === match.teams[0].win : p.win === match.teams[1].win
 			);
 			return playerTeam?.teamId === teamId;
@@ -62,7 +63,12 @@
 		</button>
 	</div>
 
-	{#if !match}
+	{#if error}
+		<div class="rounded-lg bg-red-500/10 p-8 text-center ring-1 ring-red-500/20">
+			<p class="text-lg font-bold text-red-400">Oops! Something went wrong.</p>
+			<p class="mt-2 text-sm text-red-300/80">{error}</p>
+		</div>
+	{:else if loading}
 		<div class="rounded-lg bg-surface-high/30 p-8 text-center">
 			<div class="inline-block animate-spin">
 				<svg

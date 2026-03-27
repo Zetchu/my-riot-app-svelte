@@ -1,5 +1,6 @@
 import { json } from '@sveltejs/kit';
 import { RIOT_API_KEY } from '$env/static/private';
+import type { MatchParticipantDto } from '$lib/types';
 
 export async function GET({ url }) {
 	const puuid = url.searchParams.get('puuid');
@@ -32,7 +33,9 @@ export async function GET({ url }) {
 		// Riot sends back thousands of lines of JSON per game. We only want YOUR player's stats.
 		const cleanData = fullMatches.map((match) => {
 			// Find our specific player in the 10-person participant array
-			const participant = match.info.participants.find((p: any) => p.puuid === puuid);
+			const participant = match.info.participants.find(
+				(p: MatchParticipantDto) => p.puuid === puuid
+			);
 
 			return {
 				matchId: match.metadata.matchId,
@@ -49,6 +52,7 @@ export async function GET({ url }) {
 
 		return json(cleanData);
 	} catch (error) {
+		console.error('Failed to fetch matches:', error);
 		return json({ error: 'Server error processing matches' }, { status: 500 });
 	}
 }
