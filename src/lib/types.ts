@@ -1,6 +1,3 @@
-// src/lib/types.ts
-
-// --- SUMMONER & PROFILE TYPES ---
 export interface SummonerData {
 	puuid: string;
 	gameName: string;
@@ -23,7 +20,6 @@ export interface LeagueEntry {
 	losses: number;
 }
 
-// --- MATCH TYPES ---
 export interface Objective {
 	first: boolean;
 	kills: number;
@@ -57,7 +53,7 @@ export interface MatchDetail {
 	gameDuration: number;
 	gameMode: string;
 	gameType: string;
-	patchVersion: string;
+	patchVersion?: string;
 	participants: Participant[];
 	teams: Array<{
 		teamId: number;
@@ -75,8 +71,6 @@ export interface MatchDetail {
 	}>;
 }
 
-// --- RAW RIOT API DTOs (Data Transfer Objects) ---
-// Used only in the backend to type the incoming messy Riot JSON
 export interface RiotParticipantDto {
 	puuid: string;
 	summonerName: string;
@@ -119,5 +113,17 @@ export interface MatchParticipantDto {
 	win: boolean;
 	totalMinionsKilled: number;
 	neutralMinionsKilled: number;
+	visionScore: number;
+}
+
+export interface MatchSummary {
+	matchId: string;
+	gameDuration: number;
+	championName: string;
+	kills: number;
+	deaths: number;
+	assists: number;
+	win: boolean;
+	cs: number;
 	visionScore: number;
 }

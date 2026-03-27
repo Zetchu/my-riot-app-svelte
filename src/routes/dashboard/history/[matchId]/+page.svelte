@@ -4,14 +4,23 @@
 	import type { Participant } from '$lib/types';
 
 	let match = $derived(selectedMatchStore.value);
-	let loading = $derived(!match);
 	let error = $state('');
+	let loading = $derived(!match && !error);
 
 	function formatDuration(seconds: number): string {
 		const minutes = Math.floor(seconds / 60);
 		const secs = seconds % 60;
 		return `${minutes}m ${secs}s`;
 	}
+
+	$effect(() => {
+		// If no match data is available (e.g. after a full page refresh),
+		// stop showing a loading state and surface an explicit error instead.
+		if (!match && !error) {
+			error =
+				'Match data is not available. Please return to the match history and select a match again.';
+		}
+	});
 
 	function formatNumber(num: number): string {
 		return num.toLocaleString();

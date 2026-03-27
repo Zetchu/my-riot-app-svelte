@@ -5,16 +5,13 @@
 	let player = $derived(summonerStore.value);
 
 	// Automatically calculate Win Rate
-	let winRate = $derived(() => {
+	let winRate = $derived.by(() => {
 		if (!player || (player.wins === 0 && player.losses === 0)) return 0;
 		return Math.round((player.wins / (player.wins + player.losses)) * 100);
 	});
 
 	// Automatically calculate Total Games
-	let totalGames = $derived(() => {
-		if (!player) return 0;
-		return player.wins + player.losses;
-	});
+	let totalGames = $derived(player ? player.wins + player.losses : 0);
 </script>
 
 {#if player}
@@ -61,12 +58,12 @@
 				{#if player.tier !== 'UNRANKED'}
 					<div class="flex flex-col items-end gap-1 text-right">
 						<div class="font-display text-4xl font-bold text-white">
-							{winRate()}% <span class="text-lg font-normal text-on-surface-variant">Win Rate</span>
+							{winRate}% <span class="text-lg font-normal text-on-surface-variant">Win Rate</span>
 						</div>
 						<div class="text-sm font-medium text-on-surface-variant">
 							<span class="text-blue-400">{player.wins}W</span> -
 							<span class="text-red-400">{player.losses}L</span>
-							<span class="ml-2 opacity-50">({totalGames()} Games)</span>
+							<span class="ml-2 opacity-50">({totalGames} Games)</span>
 						</div>
 					</div>
 				{/if}
@@ -75,12 +72,12 @@
 
 		<div class="grid grid-cols-1 gap-6 md:grid-cols-3">
 			<div
-				class="col-span-2 flex min-h-[300px] items-center justify-center rounded-2xl border border-dashed border-surface-variant/30 bg-surface-low p-6 text-on-surface-variant/50 ring-1 ring-white/5"
+				class="col-span-2 flex min-h-75 items-center justify-center rounded-2xl border border-dashed border-surface-variant/30 bg-surface-low p-6 text-on-surface-variant/50 ring-1 ring-white/5"
 			>
 				Top 5 Champions (Coming Soon)
 			</div>
 			<div
-				class="flex min-h-[300px] items-center justify-center rounded-2xl border border-dashed border-surface-variant/30 bg-surface-low p-6 text-on-surface-variant/50 ring-1 ring-white/5"
+				class="flex min-h-75 items-center justify-center rounded-2xl border border-dashed border-surface-variant/30 bg-surface-low p-6 text-on-surface-variant/50 ring-1 ring-white/5"
 			>
 				Most Played Roles (Coming Soon)
 			</div>

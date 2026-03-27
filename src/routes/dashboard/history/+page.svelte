@@ -3,18 +3,7 @@
 	import { goto } from '$app/navigation';
 	import { summonerStore } from '$lib/stores/summoner.svelte';
 	import { selectedMatchStore } from '$lib/stores/match.svelte';
-
-	interface MatchSummary {
-		matchId: string;
-		gameDuration: number;
-		championName: string;
-		kills: number;
-		deaths: number;
-		assists: number;
-		win: boolean;
-		cs: number;
-		visionScore: number;
-	}
+	import type { MatchSummary } from '$lib/types';
 
 	let matches = $state<MatchSummary[]>([]);
 	let loading = $state(false);
@@ -23,29 +12,29 @@
 	async function loadMatches() {
 		if (!summonerStore.value?.puuid) {
 			error = 'Summoner data not found. Please sync your summoner first.';
-			loading = false;
 			return;
 		}
+
+		// 1. Start loading BEFORE the try block!
+		loading = true;
+		error = ''; // Clear any old errors
 
 		try {
 			const response = await fetch(`/api/getMatches?puuid=${summonerStore.value.puuid}`);
 			if (!response.ok) {
 				error = 'Failed to load matches';
-				loading = false;
-				console.log(loading, 'fetch failed');
+				console.log('fetch failed');
 				return;
 			}
 
 			matches = await response.json();
-			error = '';
-			loading = false;
-			console.log(loading, 'matches loaded');
 			console.log(matches);
 		} catch (err) {
 			error = 'Failed to fetch matches';
 			console.error(err);
+			console.log('catch block');
+		} finally {
 			loading = false;
-			console.log(loading, 'catch block');
 		}
 	}
 
@@ -142,9 +131,7 @@
 							>
 								<div class="text-center">
 									<div
-										class="text-xs font-bold tracking-wider uppercase {match.win
-											? 'text-green-400'
-											: 'text-red-400'}"
+										class={`text-xs font-bold tracking-wider uppercase ${match.win ? 'text-green-400' : 'text-red-400'}`}
 									>
 										{match.win ? 'Victory' : 'Defeat'}
 									</div>
