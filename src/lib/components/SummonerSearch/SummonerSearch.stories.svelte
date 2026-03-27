@@ -11,4 +11,8 @@
 	});
 </script>
 
-<Story name="Default" />
+<Story name="Default State">
+	<div class="h-screen w-full bg-surface-lowest">
+		<SummonerSearch />
+	</div>
+</Story>

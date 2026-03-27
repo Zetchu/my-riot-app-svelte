@@ -2,7 +2,8 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { summonerStore } from '$lib/stores/summoner.svelte';
-	import SummonerSearch from '$lib/components/SummonerSearch.svelte';
+	import SummonerSearch from '$lib/components/SummonerSearch/SummonerSearch.svelte';
+	import ProfileBadge from '$lib/components/ProfileBadge/ProfileBadge.svelte';
 
 	let { children } = $props();
 
@@ -42,32 +43,9 @@
 		>
 			<div>
 				<div class="p-6">
-					<div
-						class="flex items-center gap-3 rounded-lg bg-surface-high/50 p-2 pr-4 ring-1 ring-white/10 transition hover:bg-surface-high"
-					>
-						<div
-							class="h-10 w-10 shrink-0 overflow-hidden rounded-md bg-surface-lowest ring-1 ring-surface-variant/30"
-						>
-							<img
-								src={`https://ddragon.leagueoflegends.com/cdn/16.6.1/img/profileicon/${summonerStore.value?.profileIconId ?? 29}.png`}
-								alt="Profile Icon"
-								class="h-full w-full scale-110 object-cover"
-							/>
-						</div>
-						<div class="flex flex-col justify-center overflow-hidden">
-							<div
-								class="flex items-center gap-1.5 truncate text-sm leading-none font-bold text-white"
-							>
-								{player?.gameName}
-								<span class="text-xs font-normal text-on-surface-variant">#{player?.tagLine}</span>
-							</div>
-							<div
-								class="mt-1 flex items-center text-[10px] font-bold tracking-wide text-blue-400 uppercase"
-							>
-								{player?.tier !== 'UNRANKED' ? `${player?.tier} ${player?.rank}` : 'UNRANKED'}
-							</div>
-						</div>
-					</div>
+					{#if player}
+						<ProfileBadge {player} />
+					{/if}
 				</div>
 
 				<nav class="space-y-1 px-3">

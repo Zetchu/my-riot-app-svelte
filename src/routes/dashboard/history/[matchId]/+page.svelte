@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { selectedMatchStore } from '$lib/stores/match.svelte';
 	import type { Participant } from '$lib/types';
+	import ParticipantRow from '$lib/components/ParticipantRow/ParticipantRow.svelte';
 
 	let match = $derived(selectedMatchStore.value);
 	let error = $state('');
@@ -102,105 +103,7 @@
 			<h2 class="font-display text-xl font-bold tracking-tight text-blue-400">Blue Team</h2>
 			<div class="space-y-2">
 				{#each sortByRole(getTeamParticipants(100)) as participant (participant.puuid)}
-					<div class="rounded-lg bg-surface-high p-4">
-						<div class="flex items-center justify-between">
-							<div class="flex items-center gap-4">
-								<div class="flex w-50 shrink-0 items-center gap-3">
-									<div
-										class="h-10 w-10 shrink-0 overflow-hidden rounded-md bg-surface-lowest ring-1 ring-surface-variant/30"
-									>
-										<img
-											src={`https://ddragon.leagueoflegends.com/cdn/16.6.1/img/champion/${participant.championName}.png`}
-											alt={participant.championName}
-											class="h-full w-full scale-110 object-cover"
-											loading="lazy"
-										/>
-									</div>
-									<div class="w-full space-y-1 overflow-hidden">
-										<div
-											class="truncate text-sm font-bold text-white"
-											title={`${participant.riotIdGameName || participant.summonerName || 'Unknown Player'}${participant.riotIdTagline ? '#' + participant.riotIdTagline : ''}`}
-										>
-											{participant.riotIdGameName || participant.summonerName || 'Unknown Player'}
-											{#if participant.riotIdTagline}
-												<span class="text-xs font-normal text-on-surface-variant"
-													>#{participant.riotIdTagline}</span
-												>
-											{/if}
-										</div>
-										<div class="text-xs text-on-surface-variant">
-											{participant.teamPosition}
-										</div>
-									</div>
-								</div>
-
-								<div class="flex shrink-0 gap-1">
-									{#each participant.items || [] as itemId, index (index)}
-										<div
-											class={`flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-sm 
-                                            ${index === 6 ? 'ml-2 rounded-full' : ''} 
-                                            ${itemId === 0 ? 'bg-surface-lowest/30 ring-1 ring-white/5' : 'bg-surface-container-highest ring-1 ring-surface-variant/30'}`}
-										>
-											{#if itemId > 0}
-												<img
-													src={`https://ddragon.leagueoflegends.com/cdn/16.6.1/img/item/${itemId}.png`}
-													alt={`Item ${itemId}`}
-													class="h-full w-full object-cover"
-													loading="lazy"
-												/>
-											{/if}
-										</div>
-									{/each}
-								</div>
-							</div>
-
-							<div class="flex items-center gap-8">
-								<div class="text-right">
-									<div class="text-sm font-bold text-white">
-										{participant.kills}/{participant.deaths}/{participant.assists}
-									</div>
-									<div class="text-xs text-on-surface-variant">
-										KDA: {(
-											(participant.kills + participant.assists) /
-											Math.max(participant.deaths, 1)
-										).toFixed(2)}
-									</div>
-								</div>
-
-								<div class="text-right">
-									<div class="text-sm font-bold text-white">
-										{formatNumber(
-											participant.totalMinionsKilled + participant.neutralMinionsKilled
-										)}
-									</div>
-									<div class="text-xs text-on-surface-variant">CS</div>
-								</div>
-
-								<div class="text-right">
-									<div class="text-sm font-bold text-yellow-400">
-										{formatNumber(Math.floor(participant.goldEarned / 1000))}k
-									</div>
-									<div class="text-xs text-on-surface-variant">Gold</div>
-								</div>
-
-								<div class="text-right">
-									<div class="text-sm font-bold text-red-400">
-										{formatNumber(
-											Math.floor((participant.totalDamageDealtToChampions || 0) / 1000)
-										)}k
-									</div>
-									<div class="text-xs text-on-surface-variant">Damage</div>
-								</div>
-
-								<div class="text-right">
-									<div class="text-sm font-bold text-white">
-										{participant.visionScore}
-									</div>
-									<div class="text-xs text-on-surface-variant">Vision</div>
-								</div>
-							</div>
-						</div>
-					</div>
+					<ParticipantRow {participant} />
 				{/each}
 			</div>
 		</div>
@@ -211,105 +114,7 @@
 			<h2 class="font-display text-xl font-bold tracking-tight text-red-400">Red Team</h2>
 			<div class="space-y-2">
 				{#each sortByRole(getTeamParticipants(200)) as participant (participant.puuid)}
-					<div class="rounded-lg bg-surface-high p-4">
-						<div class="flex items-center justify-between">
-							<div class="flex items-center gap-4">
-								<div class="flex w-50 shrink-0 items-center gap-3">
-									<div
-										class="h-10 w-10 shrink-0 overflow-hidden rounded-md bg-surface-lowest ring-1 ring-surface-variant/30"
-									>
-										<img
-											src={`https://ddragon.leagueoflegends.com/cdn/16.6.1/img/champion/${participant.championName}.png`}
-											alt={participant.championName}
-											class="h-full w-full scale-110 object-cover"
-											loading="lazy"
-										/>
-									</div>
-									<div class="w-full space-y-1 overflow-hidden">
-										<div
-											class="truncate text-sm font-bold text-white"
-											title={`${participant.riotIdGameName || participant.summonerName || 'Unknown Player'}${participant.riotIdTagline ? '#' + participant.riotIdTagline : ''}`}
-										>
-											{participant.riotIdGameName || participant.summonerName || 'Unknown Player'}
-											{#if participant.riotIdTagline}
-												<span class="text-xs font-normal text-on-surface-variant"
-													>#{participant.riotIdTagline}</span
-												>
-											{/if}
-										</div>
-										<div class="text-xs text-on-surface-variant">
-											{participant.teamPosition}
-										</div>
-									</div>
-								</div>
-
-								<div class="flex shrink-0 gap-1">
-									{#each participant.items || [] as itemId, index (index)}
-										<div
-											class={`flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-sm 
-                                            ${index === 6 ? 'ml-2 rounded-full' : ''} 
-                                            ${itemId === 0 ? 'bg-surface-lowest/30 ring-1 ring-white/5' : 'bg-surface-container-highest ring-1 ring-surface-variant/30'}`}
-										>
-											{#if itemId > 0}
-												<img
-													src={`https://ddragon.leagueoflegends.com/cdn/16.6.1/img/item/${itemId}.png`}
-													alt={`Item ${itemId}`}
-													class="h-full w-full object-cover"
-													loading="lazy"
-												/>
-											{/if}
-										</div>
-									{/each}
-								</div>
-							</div>
-
-							<div class="flex items-center gap-8">
-								<div class="text-right">
-									<div class="text-sm font-bold text-white">
-										{participant.kills}/{participant.deaths}/{participant.assists}
-									</div>
-									<div class="text-xs text-on-surface-variant">
-										KDA: {(
-											(participant.kills + participant.assists) /
-											Math.max(participant.deaths, 1)
-										).toFixed(2)}
-									</div>
-								</div>
-
-								<div class="text-right">
-									<div class="text-sm font-bold text-white">
-										{formatNumber(
-											participant.totalMinionsKilled + participant.neutralMinionsKilled
-										)}
-									</div>
-									<div class="text-xs text-on-surface-variant">CS</div>
-								</div>
-
-								<div class="text-right">
-									<div class="text-sm font-bold text-yellow-400">
-										{formatNumber(Math.floor(participant.goldEarned / 1000))}k
-									</div>
-									<div class="text-xs text-on-surface-variant">Gold</div>
-								</div>
-
-								<div class="text-right">
-									<div class="text-sm font-bold text-red-400">
-										{formatNumber(
-											Math.floor((participant.totalDamageDealtToChampions || 0) / 1000)
-										)}k
-									</div>
-									<div class="text-xs text-on-surface-variant">Damage</div>
-								</div>
-
-								<div class="text-right">
-									<div class="text-sm font-bold text-white">
-										{participant.visionScore}
-									</div>
-									<div class="text-xs text-on-surface-variant">Vision</div>
-								</div>
-							</div>
-						</div>
-					</div>
+					<ParticipantRow {participant} />
 				{/each}
 			</div>
 		</div>
