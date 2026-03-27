@@ -48,17 +48,17 @@
 </script>
 
 <Story name="Fed Mid Laner" args={{ participant: mockCarry }}>
-	{#snippet children()}
+	{#snippet template(args)}
 		<div class="bg-surface-low p-6">
-			<ParticipantRow participant={mockCarry} />
+			<ParticipantRow participant={args.participant} />
 		</div>
 	{/snippet}
 </Story>
 
 <Story name="Vision Heavy Support" args={{ participant: mockSupport }}>
-	{#snippet children()}
+	{#snippet template(args)}
 		<div class="bg-surface-low p-6">
-			<ParticipantRow participant={mockSupport} />
+			<ParticipantRow participant={args.participant} />
 		</div>
 	{/snippet}
 </Story>

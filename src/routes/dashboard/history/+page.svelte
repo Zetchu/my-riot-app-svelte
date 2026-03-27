@@ -56,11 +56,11 @@
 		}
 	}
 
-	function formatDuration(seconds: number): string {
-		const minutes = Math.floor(seconds / 60);
-		const secs = seconds % 60;
-		return `${minutes}m ${secs}s`;
-	}
+	// function formatDuration(seconds: number): string {
+	// 	const minutes = Math.floor(seconds / 60);
+	// 	const secs = seconds % 60;
+	// 	return `${minutes}m ${secs}s`;
+	// }
 
 	onMount(() => {
 		console.log(loading);

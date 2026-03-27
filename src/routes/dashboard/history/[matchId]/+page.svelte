@@ -23,9 +23,9 @@
 		}
 	});
 
-	function formatNumber(num: number): string {
-		return num.toLocaleString();
-	}
+	// function formatNumber(num: number): string {
+	// 	return num.toLocaleString();
+	// }
 
 	function getTeamParticipants(teamId: number): Participant[] {
 		if (!match) return [];
