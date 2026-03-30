@@ -21,13 +21,19 @@
 			return;
 		}
 
-		if (isLoadMore) loadingMore = true;
-		else loading = true;
+		if (!isLoadMore) {
+			startOffset = 0;
+			hasMore = true;
+		}
 
+		if (isLoadMore) {
+			loadingMore = true;
+		} else {
+			loading = true;
+		}
 		error = '';
 
 		try {
-			// Request matches using our new startOffset parameter
 			const response = await fetch(
 				`/api/getMatches?puuid=${summonerStore.value.puuid}&start=${startOffset}&count=5`
 			);
@@ -39,12 +45,16 @@
 
 			const newMatches = await response.json();
 
-			// If Riot returns fewer than 5 matches, we've reached the end of their history!
 			if (newMatches.length < 5) hasMore = false;
 
-			// If we clicked "Load More", append them. Otherwise, replace them.
 			if (isLoadMore) {
-				matches = [...matches, ...newMatches];
+				const existingIds = new Set(matches.map((m) => m.matchId));
+
+				const uniqueNewMatches = newMatches.filter(
+					(m: { matchId: string }) => !existingIds.has(m.matchId)
+				);
+
+				matches = [...matches, ...uniqueNewMatches];
 			} else {
 				matches = newMatches;
 			}
@@ -58,7 +68,7 @@
 	}
 
 	function handleLoadMore() {
-		startOffset += 5; // Move the cursor forward by 5
+		startOffset += 5;
 		loadMatches(true);
 	}
 	async function handleMatchClick(matchId: string) {
@@ -77,13 +87,6 @@
 			console.error(err);
 		}
 	}
-
-	// function formatDuration(seconds: number): string {
-	// 	const minutes = Math.floor(seconds / 60);
-	// 	const secs = seconds % 60;
-	// 	return `${minutes}m ${secs}s`;
-	// }
-
 	onMount(() => {
 		console.log(loading);
 

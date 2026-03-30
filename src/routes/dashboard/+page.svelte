@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { summonerStore } from '$lib/stores/summoner.svelte';
 	import type { MatchSummary } from '$lib/types';
 
@@ -52,20 +51,27 @@
 			.slice(0, 5);
 	});
 
-	// Fetch recent matches silently in the background when the dashboard opens
-	onMount(async () => {
+	// Fetch recent matches silently, and refetch if the player changes
+	$effect(() => {
 		if (player?.puuid) {
 			loadingMatches = true;
-			try {
-				const res = await fetch(`/api/getMatches?puuid=${player.puuid}&count=15`);
-				if (res.ok) {
-					matches = await res.json();
+
+			// Define the async fetch inside the effect
+			const fetchAggregationData = async () => {
+				try {
+					const res = await fetch(`/api/getMatches?puuid=${player.puuid}&count=15`);
+					if (res.ok) {
+						matches = (await res.json()) as MatchSummary[];
+					}
+				} catch (e) {
+					console.error('Failed to load matches for aggregation', e);
+				} finally {
+					loadingMatches = false;
 				}
-			} catch (e) {
-				console.error('Failed to load matches for aggregation', e);
-			} finally {
-				loadingMatches = false;
-			}
+			};
+
+			// Call it immediately
+			fetchAggregationData();
 		}
 	});
 </script>
