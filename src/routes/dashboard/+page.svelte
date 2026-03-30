@@ -144,7 +144,7 @@
 					</div>
 				{:else}
 					<div class="space-y-3">
-						{#each topChampions as champ}
+						{#each topChampions as champ (champ.name)}
 							{@const champWinRate = Math.round((champ.wins / champ.games) * 100)}
 							{@const kda =
 								champ.deaths === 0
