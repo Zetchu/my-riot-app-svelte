@@ -10,27 +10,40 @@ export async function GET({ url }) {
 
 	if (!puuid) return json({ error: 'Missing puuid' }, { status: 400 });
 
+	// 1. Grab the raw strings from the URL
+	const rawStart = url.searchParams.get('start');
+	const rawCount = url.searchParams.get('count');
+
+	// 2. Safely parse them into integers (falling back to defaults if missing)
+	let start = parseInt(rawStart || '0', 10);
+	let count = parseInt(rawCount || '5', 10);
+
+	// 3. Validate: If they typed letters instead of numbers, or negative numbers, reset to defaults
+	if (isNaN(start) || start < 0) start = 0;
+	if (isNaN(count) || count < 1) count = 5;
+
+	// 4. THE CLAMP: Hard-cap the count at 15 to protect our Riot Rate Limits
+	count = Math.min(count, 15);
+
 	try {
-		// 1. Get the last 5 Match IDs
-		const idsUrl = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=5`;
+		// 1. Get the Match IDs (using our newly cleaned variables!)
+		const idsUrl = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${start}&count=${count}&type=ranked`;
 		const idsResponse = await fetch(idsUrl, { headers: { 'X-Riot-Token': RIOT_API_KEY } });
 
 		if (!idsResponse.ok)
 			return json({ error: 'Failed to fetch match IDs' }, { status: idsResponse.status });
 		const matchIds = await idsResponse.json();
 
-		// 2. Fetch the details for all 5 matches simultaneously
+		// 2. Fetch the details for all the matches simultaneously
 		const matchPromises = matchIds.map(async (matchId: string) => {
 			const matchUrl = `https://${region}.api.riotgames.com/lol/match/v5/matches/${matchId}`;
 			const matchRes = await fetch(matchUrl, { headers: { 'X-Riot-Token': RIOT_API_KEY } });
 			return matchRes.json();
 		});
 
-		// Wait for all 5 matches to finish downloading
+		// Wait for all matches to finish downloading
 		const fullMatches = await Promise.all(matchPromises);
 
-		// 3. (Optional but recommended) Clean up the massive Riot payload
-		// Riot sends back thousands of lines of JSON per game. We only want YOUR player's stats.
 		const cleanData = fullMatches.map((match) => {
 			// Find our specific player in the 10-person participant array
 			const participant = match.info.participants.find(

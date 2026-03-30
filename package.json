@@ -16,12 +16,14 @@
 		"test:unit": "vitest",
 		"test": "npm run test:unit -- --run",
 		"storybook": "storybook dev -p 6006",
-		"build-storybook": "storybook build"
+		"build-storybook": "storybook build",
+		"e2e": "npx playwright test"
 	},
 	"devDependencies": {
 		"@chromatic-com/storybook": "^5.1.1",
 		"@eslint/compat": "^2.0.2",
 		"@eslint/js": "^9.39.2",
+		"@playwright/test": "^1.58.2",
 		"@storybook/addon-a11y": "^10.3.3",
 		"@storybook/addon-docs": "^10.3.3",
 		"@storybook/addon-svelte-csf": "^5.1.1",

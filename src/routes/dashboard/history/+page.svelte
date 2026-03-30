@@ -8,37 +8,69 @@
 
 	let matches = $state<MatchSummary[]>([]);
 	let loading = $state(false);
+	let loadingMore = $state(false);
 	let error = $state('');
 
-	async function loadMatches() {
+	// Pagination State
+	let startOffset = $state(0);
+	let hasMore = $state(true);
+
+	async function loadMatches(isLoadMore = false) {
 		if (!summonerStore.value?.puuid) {
 			error = 'Summoner data not found. Please sync your summoner first.';
 			return;
 		}
 
-		// 1. Start loading BEFORE the try block!
-		loading = true;
-		error = ''; // Clear any old errors
+		if (!isLoadMore) {
+			startOffset = 0;
+			hasMore = true;
+		}
+
+		if (isLoadMore) {
+			loadingMore = true;
+		} else {
+			loading = true;
+		}
+		error = '';
 
 		try {
-			const response = await fetch(`/api/getMatches?puuid=${summonerStore.value.puuid}`);
+			const response = await fetch(
+				`/api/getMatches?puuid=${summonerStore.value.puuid}&start=${startOffset}&count=5`
+			);
+
 			if (!response.ok) {
 				error = 'Failed to load matches';
-				console.log('fetch failed');
 				return;
 			}
 
-			matches = await response.json();
-			console.log(matches);
+			const newMatches = await response.json();
+
+			if (newMatches.length < 5) hasMore = false;
+
+			if (isLoadMore) {
+				const existingIds = new Set(matches.map((m) => m.matchId));
+
+				const uniqueNewMatches = newMatches.filter(
+					(m: { matchId: string }) => !existingIds.has(m.matchId)
+				);
+
+				matches = [...matches, ...uniqueNewMatches];
+			} else {
+				matches = newMatches;
+			}
 		} catch (err) {
 			error = 'Failed to fetch matches';
 			console.error(err);
-			console.log('catch block');
 		} finally {
-			loading = false;
+			if (isLoadMore) loadingMore = false;
+			else loading = false;
 		}
 	}
 
+	function handleLoadMore() {
+		startOffset += 5;
+		loadMatches(true);
+	}
 	async function handleMatchClick(matchId: string) {
 		try {
 			const response = await fetch(`/api/getMatch?matchId=${matchId}`);
@@ -55,13 +87,6 @@
 			console.error(err);
 		}
 	}
-
-	// function formatDuration(seconds: number): string {
-	// 	const minutes = Math.floor(seconds / 60);
-	// 	const secs = seconds % 60;
-	// 	return `${minutes}m ${secs}s`;
-	// }
-
 	onMount(() => {
 		console.log(loading);
 
@@ -105,7 +130,7 @@
 		<div class="rounded-lg bg-red-500/10 p-6 ring-1 ring-red-500/20">
 			<p class="text-red-400">{error}</p>
 			<button
-				onclick={loadMatches}
+				onclick={() => loadMatches()}
 				class="mt-4 rounded-sm bg-red-500/20 px-4 py-2 text-sm font-semibold text-red-400 transition hover:bg-red-500/30"
 			>
 				Try Again
@@ -123,5 +148,21 @@
 				<MatchHistoryRow {match} onclick={() => handleMatchClick(match.matchId)} />
 			{/each}
 		</div>
+		{#if hasMore && matches.length > 0}
+			<button
+				onclick={handleLoadMore}
+				disabled={loadingMore}
+				class="mt-6 w-full rounded-lg border border-surface-variant/30 bg-surface-low py-4 text-sm font-bold text-on-surface-variant transition hover:bg-surface-high hover:text-white disabled:opacity-50"
+			>
+				{#if loadingMore}
+					<div
+						class="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-primary border-r-transparent align-middle"
+					></div>
+					Loading...
+				{:else}
+					Load More Matches
+				{/if}
+			</button>
+		{/if}
 	{/if}
 </div>
