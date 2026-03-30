@@ -6,13 +6,15 @@ export async function GET({ url }) {
 	const puuid = url.searchParams.get('puuid');
 	// Note: Match-V5 uses large routing regions (europe, americas, asia).
 	// Change 'europe' below to match your account's region!
+	const start = url.searchParams.get('start') || '0';
+	const count = url.searchParams.get('count') || '5';
 	const region = 'europe';
 
 	if (!puuid) return json({ error: 'Missing puuid' }, { status: 400 });
 
 	try {
 		// 1. Get the last 5 Match IDs
-		const idsUrl = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=0&count=5`;
+		const idsUrl = `https://${region}.api.riotgames.com/lol/match/v5/matches/by-puuid/${puuid}/ids?start=${start}&count=${count}&type=ranked`;
 		const idsResponse = await fetch(idsUrl, { headers: { 'X-Riot-Token': RIOT_API_KEY } });
 
 		if (!idsResponse.ok)
