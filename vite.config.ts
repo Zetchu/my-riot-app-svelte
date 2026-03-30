@@ -15,6 +15,14 @@ export default defineConfig({
 		conditions: ['browser']
 	},
 	test: {
+		exclude: [
+			'**/node_modules/**',
+			'**/.git/**',
+			'**/dist/**',
+			'**/.next/**',
+			'**/e2e/**',
+			'**/tests/**'
+		],
 		projects: [
 			{
 				extends: true,

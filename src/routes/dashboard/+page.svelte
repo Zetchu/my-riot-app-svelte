@@ -191,7 +191,7 @@
 			</div>
 
 			<div
-				class="flex min-h-[20rem] items-center justify-center rounded-2xl border border-dashed border-surface-variant/30 bg-surface-low p-6 text-on-surface-variant/50 ring-1 ring-white/5"
+				class="flex min-h-80 items-center justify-center rounded-2xl border border-dashed border-surface-variant/30 bg-surface-low p-6 text-on-surface-variant/50 ring-1 ring-white/5"
 			>
 				Most Played Roles (Coming Soon)
 			</div>
