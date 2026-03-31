@@ -62,7 +62,7 @@ test.describe('Landing Page Search', () => {
 		// 2. Verify the Sidebar Profile Badge loaded correctly by grabbing the first instance of the text
 		await expect(page.getByText('DIAMOND I').first()).toBeVisible();
 
-		// (Optional) We can also verify the Win Rate calculated correctly from our fake 100W / 50L data!
-		await expect(page.getByText('67%')).toBeVisible();
+		// Intentional failure: The real math is 67%, so this will crash!
+		await expect(page.getByText('99%')).toBeVisible();
 	});
 });
