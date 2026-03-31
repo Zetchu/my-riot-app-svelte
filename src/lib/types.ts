@@ -120,6 +120,7 @@ export interface MatchSummary {
 	matchId: string;
 	gameDuration: number;
 	championName: string;
+	teamPosition: string;
 	kills: number;
 	deaths: number;
 	assists: number;

@@ -51,6 +51,39 @@
 			.slice(0, 5);
 	});
 
+	// Role Aggregation Engine
+	let topRoles = $derived.by(() => {
+		if (matches.length === 0) return [];
+
+		const stats: Record<string, { role: string; games: number; wins: number }> = {};
+
+		for (const match of matches) {
+			// Riot sometimes returns an empty string for special modes like ARAM
+			const role = match.teamPosition || 'UNKNOWN';
+			if (!stats[role]) {
+				stats[role] = { role, games: 0, wins: 0 };
+			}
+			stats[role].games += 1;
+			if (match.win) stats[role].wins += 1;
+		}
+
+		// Sort by most played
+		return Object.values(stats).sort((a, b) => b.games - a.games);
+	});
+
+	// Helper to make Riot's ugly ALL_CAPS roles look pretty
+	const formatRole = (role: string) => {
+		const map: Record<string, string> = {
+			TOP: 'Top Lane',
+			JUNGLE: 'Jungle',
+			MIDDLE: 'Mid Lane',
+			BOTTOM: 'ADC',
+			UTILITY: 'Support',
+			UNKNOWN: 'Flex / ARAM'
+		};
+		return map[role] || role;
+	};
+
 	// Fetch recent matches silently, and refetch if the player changes
 	$effect(() => {
 		if (player?.puuid) {
@@ -197,9 +230,55 @@
 			</div>
 
 			<div
-				class="flex min-h-80 items-center justify-center rounded-2xl border border-dashed border-surface-variant/30 bg-surface-low p-6 text-on-surface-variant/50 ring-1 ring-white/5"
+				class="flex flex-col rounded-2xl border border-surface-variant/30 bg-surface-low p-6 ring-1 ring-white/5"
 			>
-				Most Played Roles (Coming Soon)
+				<h3 class="mb-6 font-display text-xl font-bold text-white">Role Distribution</h3>
+
+				{#if loadingMatches}
+					<div class="flex flex-1 items-center justify-center text-on-surface-variant/50">
+						Loading roles...
+					</div>
+				{:else if topRoles.length === 0}
+					<div class="flex flex-1 items-center justify-center text-on-surface-variant/50">
+						No role data available.
+					</div>
+				{:else}
+					<div class="space-y-4">
+						{#each topRoles as role (role.role)}
+							{@const roleWinRate = Math.round((role.wins / role.games) * 100)}
+							{@const playRate = Math.round((role.games / matches.length) * 100)}
+
+							<div
+								class="relative overflow-hidden rounded-xl bg-surface-high/50 p-4 ring-1 ring-white/5 transition hover:bg-surface-high"
+							>
+								<div
+									class="absolute top-0 left-0 h-full bg-primary/10 transition-all duration-1000"
+									style={`width: ${playRate}%`}
+								></div>
+
+								<div class="relative flex items-center justify-between">
+									<div>
+										<div class="font-bold text-white">{formatRole(role.role)}</div>
+										<div class="text-xs font-medium text-on-surface-variant">
+											{playRate}% Play Rate ({role.games} games)
+										</div>
+									</div>
+
+									<div class="text-right">
+										<div
+											class={`text-sm font-bold ${roleWinRate >= 50 ? 'text-blue-400' : 'text-red-400'}`}
+										>
+											{roleWinRate}% WR
+										</div>
+										<div class="text-[10px] tracking-wider text-on-surface-variant uppercase">
+											{role.wins}W - {role.games - role.wins}L
+										</div>
+									</div>
+								</div>
+							</div>
+						{/each}
+					</div>
+				{/if}
 			</div>
 		</div>
 	</div>

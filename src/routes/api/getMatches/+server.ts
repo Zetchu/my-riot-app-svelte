@@ -54,6 +54,7 @@ export async function GET({ url }) {
 				matchId: match.metadata.matchId,
 				gameDuration: match.info.gameDuration,
 				championName: participant.championName,
+				teamPosition: participant.teamPosition,
 				kills: participant.kills,
 				deaths: participant.deaths,
 				assists: participant.assists,
