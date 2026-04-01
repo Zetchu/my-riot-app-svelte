@@ -11,9 +11,6 @@
 
 	let totalGames = $derived(player ? player.wins + player.losses : 0);
 
-	// --- STEP 3: THE DATA AGGREGATOR ---
-
-	// INSTEAD of an empty array and an API fetch, we just read the instant cache!
 	let matches = $derived(matchHistoryStore.value);
 
 	let topChampions = $derived.by(() => {
@@ -78,15 +75,15 @@
 </script>
 
 {#if player}
-	<div class="mx-auto max-w-5xl space-y-8">
+	<div class="mx-auto max-w-5xl space-y-6 md:space-y-8">
 		<div
-			class="flex items-center gap-8 rounded-2xl bg-surface-high p-8 shadow-lg ring-1 ring-white/5"
+			class="flex flex-col items-center gap-6 rounded-2xl bg-surface-high p-6 text-center shadow-lg ring-1 ring-white/5 md:flex-row md:gap-8 md:p-8 md:text-left"
 		>
 			<div class="relative shrink-0">
 				<img
 					src={`https://ddragon.leagueoflegends.com/cdn/14.8.1/img/profileicon/${player.profileIconId}.png`}
 					alt="Profile Icon"
-					class="h-28 w-28 rounded-2xl border-2 border-surface-variant/50 object-cover shadow-xl"
+					class="h-24 w-24 rounded-2xl border-2 border-surface-variant/50 object-cover shadow-xl md:h-28 md:w-28"
 				/>
 				<div
 					class="absolute -bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-surface-lowest px-4 py-1 text-xs font-bold whitespace-nowrap text-white shadow-md ring-1 ring-surface-variant/50"
@@ -95,20 +92,28 @@
 				</div>
 			</div>
 
-			<div class="flex flex-1 items-center justify-between">
+			<div
+				class="flex w-full flex-1 flex-col items-center justify-between gap-6 md:flex-row md:gap-0"
+			>
 				<div class="space-y-2">
-					<h1 class="font-display text-4xl font-bold tracking-tight text-white">
-						{player.gameName}
-						<span class="text-2xl font-normal text-on-surface-variant">#{player.tagLine}</span>
+					<h1
+						class="flex flex-col items-center gap-1 font-display text-3xl font-bold tracking-tight text-white md:block md:text-4xl"
+					>
+						<span>{player.gameName}</span>
+						<span class="text-xl font-normal text-on-surface-variant md:ml-2 md:text-2xl"
+							>#{player.tagLine}</span
+						>
 					</h1>
 
 					{#if player.tier !== 'UNRANKED'}
-						<div class="flex items-center gap-4 text-sm">
+						<div
+							class="flex flex-wrap items-center justify-center gap-3 text-sm md:justify-start md:gap-4"
+						>
 							<span class="font-bold tracking-wider text-primary uppercase drop-shadow-sm">
 								{player.tier}
 								{player.rank}
 							</span>
-							<span class="text-on-surface-variant">•</span>
+							<span class="hidden text-on-surface-variant md:block">•</span>
 							<span class="font-medium text-white">{player.leaguePoints} LP</span>
 						</div>
 					{:else}
@@ -119,9 +124,17 @@
 				</div>
 
 				{#if player.tier !== 'UNRANKED'}
-					<div class="flex flex-col items-end gap-1 text-right">
-						<div class="font-display text-4xl font-bold text-white">
-							{winRate}% <span class="text-lg font-normal text-on-surface-variant">Win Rate</span>
+					<div
+						class="flex w-full flex-col items-center gap-1 rounded-xl bg-surface-low/50 p-4 text-center ring-1 ring-white/5 md:w-auto md:items-end md:bg-transparent md:p-0 md:text-right md:ring-0"
+					>
+						<div
+							class="flex items-baseline gap-2 font-display text-3xl font-bold text-white md:block md:text-4xl"
+						>
+							{winRate}%
+							<span
+								class="text-sm font-normal tracking-widest text-on-surface-variant uppercase md:ml-2 md:text-lg md:tracking-normal md:normal-case"
+								>Win Rate</span
+							>
 						</div>
 						<div class="text-sm font-medium text-on-surface-variant">
 							<span class="text-blue-400">{player.wins}W</span> -
@@ -135,7 +148,7 @@
 
 		<div class="grid grid-cols-1 gap-6 md:grid-cols-3">
 			<div
-				class="col-span-2 flex flex-col rounded-2xl border border-surface-variant/30 bg-surface-low p-6 ring-1 ring-white/5"
+				class="col-span-1 flex flex-col rounded-2xl border border-surface-variant/30 bg-surface-low p-6 ring-1 ring-white/5 md:col-span-2"
 			>
 				<h3 class="mb-6 font-display text-xl font-bold text-white">
 					Recent Top Champions (Last 15 Games)
@@ -145,23 +158,14 @@
 					<div class="space-y-3">
 						{#each [1, 2, 3, 4, 5] as i (i)}
 							<div
-								class="flex animate-pulse items-center gap-4 rounded-xl bg-surface-high/30 p-3 ring-1 ring-white/5"
+								class="flex animate-pulse items-center gap-3 rounded-xl bg-surface-high/30 p-3 ring-1 ring-white/5"
 							>
-								<div class="h-12 w-12 rounded-lg bg-surface-variant/40"></div>
-
+								<div
+									class="h-10 w-10 shrink-0 rounded-lg bg-surface-variant/40 sm:h-12 sm:w-12"
+								></div>
 								<div class="flex-1 space-y-2">
-									<div class="h-4 w-24 rounded bg-surface-variant/40"></div>
-									<div class="h-3 w-16 rounded bg-surface-variant/20"></div>
-								</div>
-
-								<div class="flex w-24 flex-col items-end space-y-2">
-									<div class="h-4 w-12 rounded bg-surface-variant/40"></div>
-									<div class="h-3 w-16 rounded bg-surface-variant/20"></div>
-								</div>
-
-								<div class="flex w-20 flex-col items-end space-y-2">
-									<div class="h-4 w-8 rounded bg-surface-variant/40"></div>
-									<div class="h-3 w-8 rounded bg-surface-variant/20"></div>
+									<div class="h-4 w-20 rounded bg-surface-variant/40"></div>
+									<div class="h-3 w-12 rounded bg-surface-variant/20"></div>
 								</div>
 							</div>
 						{/each}
@@ -176,22 +180,22 @@
 									: ((champ.kills + champ.assists) / champ.deaths).toFixed(2)}
 
 							<div
-								class="flex items-center gap-4 rounded-xl bg-surface-high/50 p-3 ring-1 ring-white/5 transition hover:bg-surface-high"
+								class="flex items-center gap-3 rounded-xl bg-surface-high/50 p-3 ring-1 ring-white/5 transition hover:bg-surface-high sm:gap-4"
 							>
 								<img
 									src={`https://ddragon.leagueoflegends.com/cdn/14.8.1/img/champion/${champ.name}.png`}
 									alt={champ.name}
-									class="h-12 w-12 rounded-lg shadow-sm"
+									class="h-10 w-10 shrink-0 rounded-lg shadow-sm sm:h-12 sm:w-12"
 								/>
 
-								<div class="flex-1">
-									<div class="font-bold text-white">{champ.name}</div>
+								<div class="flex-1 truncate">
+									<div class="truncate font-bold text-white">{champ.name}</div>
 									<div class="text-xs font-medium text-on-surface-variant">
 										{champ.games} Played
 									</div>
 								</div>
 
-								<div class="w-24 text-right">
+								<div class="w-16 shrink-0 text-right sm:w-24">
 									<div
 										class={`text-sm font-bold ${champWinRate >= 50 ? 'text-blue-400' : 'text-red-400'}`}
 									>
@@ -202,7 +206,7 @@
 									</div>
 								</div>
 
-								<div class="w-20 text-right">
+								<div class="w-14 shrink-0 text-right sm:w-20">
 									<div class="text-sm font-bold text-white">{kda}</div>
 									<div class="text-[10px] tracking-wider text-on-surface-variant uppercase">
 										KDA
@@ -229,10 +233,6 @@
 									<div class="h-4 w-20 rounded bg-surface-variant/40"></div>
 									<div class="h-3 w-28 rounded bg-surface-variant/20"></div>
 								</div>
-								<div class="flex flex-col items-end space-y-2">
-									<div class="h-4 w-12 rounded bg-surface-variant/40"></div>
-									<div class="h-3 w-16 rounded bg-surface-variant/20"></div>
-								</div>
 							</div>
 						{/each}
 					</div>
@@ -250,15 +250,15 @@
 									style={`width: ${playRate}%`}
 								></div>
 
-								<div class="relative flex items-center justify-between">
-									<div>
-										<div class="font-bold text-white">{formatRole(role.role)}</div>
+								<div class="relative flex items-center justify-between gap-2">
+									<div class="truncate">
+										<div class="truncate font-bold text-white">{formatRole(role.role)}</div>
 										<div class="text-xs font-medium text-on-surface-variant">
-											{playRate}% Play Rate ({role.games} games)
+											{playRate}% Rate
 										</div>
 									</div>
 
-									<div class="text-right">
+									<div class="shrink-0 text-right">
 										<div
 											class={`text-sm font-bold ${roleWinRate >= 50 ? 'text-blue-400' : 'text-red-400'}`}
 										>
