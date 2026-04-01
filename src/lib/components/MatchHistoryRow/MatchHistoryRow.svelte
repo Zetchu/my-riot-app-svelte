@@ -9,6 +9,15 @@
 	);
 	let minutes = $derived(Math.floor(match.gameDuration / 60));
 	let seconds = $derived(match.gameDuration % 60);
+
+	// NEW: Determine tilt color severity
+	let tiltSeverityClass = $derived(
+		match.tiltScore >= 30
+			? 'bg-red-500/10 text-red-400 ring-red-500/30'
+			: match.tiltScore >= 15
+				? 'bg-yellow-500/10 text-yellow-400 ring-yellow-500/30'
+				: 'bg-green-500/10 text-green-400 ring-green-500/30'
+	);
 </script>
 
 <div
@@ -53,6 +62,29 @@
 			<div class="text-xs font-medium tracking-wider text-on-surface-variant uppercase">
 				{match.teamPosition || 'Flex'}
 			</div>
+			{#if match.tiltScore !== undefined}
+				<div
+					class="flex flex-col items-start border-t border-surface-variant/30 pt-3 sm:items-end sm:border-t-0 sm:border-l sm:pt-0 sm:pl-6"
+				>
+					<div
+						class={`inline-flex items-center rounded-md px-2.5 py-1 text-xs font-bold ring-1 ${tiltSeverityClass}`}
+					>
+						Tilt Score: {match.tiltScore}
+					</div>
+
+					{#if match.tiltModifiers && match.tiltModifiers.length > 0}
+						<div class="mt-1.5 flex flex-col gap-0.5 text-left sm:text-right">
+							{#each match.tiltModifiers as modifier (modifier)}
+								<span
+									class="text-[10px] font-medium tracking-wide text-on-surface-variant/70 uppercase"
+								>
+									{modifier}
+								</span>
+							{/each}
+						</div>
+					{/if}
+				</div>
+			{/if}
 		</div>
 	</div>
 </div>

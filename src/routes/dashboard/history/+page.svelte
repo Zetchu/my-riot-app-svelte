@@ -71,17 +71,21 @@
 		startOffset += 5;
 		loadMatches(true);
 	}
-	async function handleMatchClick(matchId: string) {
+	async function handleMatchClick(matchSummary: MatchSummary) {
 		try {
-			const response = await fetch(`/api/getMatch?matchId=${matchId}`);
+			const response = await fetch(`/api/getMatch?matchId=${matchSummary.matchId}`);
 			if (!response.ok) {
 				error = 'Failed to load match details';
 				return;
 			}
 
 			const matchDetail = await response.json();
+
+			matchDetail.tiltScore = matchSummary.tiltScore;
+			matchDetail.tiltModifiers = matchSummary.tiltModifiers;
+
 			selectedMatchStore.value = matchDetail;
-			await goto(`/dashboard/history/${matchId}`);
+			await goto(`/dashboard/history/${matchSummary.matchId}`);
 		} catch (err) {
 			error = 'Failed to load match details';
 			console.error(err);
@@ -145,7 +149,7 @@
 		<!-- Match List -->
 		<div class="space-y-3">
 			{#each matches as match (match.matchId)}
-				<MatchHistoryRow {match} onclick={() => handleMatchClick(match.matchId)} />
+				<MatchHistoryRow {match} onclick={() => handleMatchClick(match)} />
 			{/each}
 		</div>
 		{#if hasMore && matches.length > 0}

@@ -18,7 +18,10 @@
 		assists: 14,
 		win: true,
 		cs: 165,
-		visionScore: 42
+		visionScore: 42,
+		teamPosition: '',
+		tiltScore: 0,
+		tiltModifiers: []
 	};
 
 	// Mock data for a Defeat
