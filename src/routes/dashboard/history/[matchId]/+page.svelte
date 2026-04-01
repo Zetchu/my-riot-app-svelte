@@ -26,18 +26,6 @@
 		match?.participants.find((p) => p.puuid === summonerStore.value?.puuid)
 	);
 
-	// Dictionary to explain what each modifier actually means
-	const modifierDescriptions: Record<string, string> = {
-		'Stomp Penalty':
-			'This game ended in under 20 minutes. Extremely fast losses usually indicate a highly frustrating, one-sided match.',
-		'1v9 Buffer':
-			'Your individual KDA was significantly higher than your team average. The system recognizes you played well despite the loss.',
-		'Team Diff Buffer':
-			'You had a major gold lead at 15 minutes compared to your team. You won your early game, mitigating self-tilt.',
-		'Champion Hopping':
-			'You are playing multiple different champions across recent games. Switching champs randomly is a classic behavioral sign of tilt-queuing.'
-	};
-
 	function formatDuration(seconds: number): string {
 		const minutes = Math.floor(seconds / 60);
 		const secs = seconds % 60;

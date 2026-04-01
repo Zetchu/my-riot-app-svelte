@@ -1,11 +1,9 @@
 <script lang="ts">
 	import { summonerStore } from '$lib/stores/summoner.svelte';
-	import type { MatchSummary } from '$lib/types';
+	import { matchHistoryStore } from '$lib/stores/match.svelte';
 
-	// Create a reactive alias to our player data
 	let player = $derived(summonerStore.value);
 
-	// Automatically calculate Win Rate
 	let winRate = $derived.by(() => {
 		if (!player || (player.wins === 0 && player.losses === 0)) return 0;
 		return Math.round((player.wins / (player.wins + player.losses)) * 100);
@@ -14,14 +12,13 @@
 	let totalGames = $derived(player ? player.wins + player.losses : 0);
 
 	// --- STEP 3: THE DATA AGGREGATOR ---
-	let matches = $state<MatchSummary[]>([]);
-	let loadingMatches = $state(false);
 
-	// The Aggregation Engine
+	// INSTEAD of an empty array and an API fetch, we just read the instant cache!
+	let matches = $derived(matchHistoryStore.value);
+
 	let topChampions = $derived.by(() => {
 		if (matches.length === 0) return [];
 
-		// 1. Group data by champion
 		const stats: Record<
 			string,
 			{ name: string; games: number; wins: number; kills: number; deaths: number; assists: number }
@@ -45,20 +42,17 @@
 			stats[match.championName].assists += match.assists;
 		}
 
-		// 2. Convert object to array, sort by games played, and grab top 5
 		return Object.values(stats)
 			.sort((a, b) => b.games - a.games)
 			.slice(0, 5);
 	});
 
-	// Role Aggregation Engine
 	let topRoles = $derived.by(() => {
 		if (matches.length === 0) return [];
 
 		const stats: Record<string, { role: string; games: number; wins: number }> = {};
 
 		for (const match of matches) {
-			// Riot sometimes returns an empty string for special modes like ARAM
 			const role = match.teamPosition || 'UNKNOWN';
 			if (!stats[role]) {
 				stats[role] = { role, games: 0, wins: 0 };
@@ -67,11 +61,9 @@
 			if (match.win) stats[role].wins += 1;
 		}
 
-		// Sort by most played
 		return Object.values(stats).sort((a, b) => b.games - a.games);
 	});
 
-	// Helper to make Riot's ugly ALL_CAPS roles look pretty
 	const formatRole = (role: string) => {
 		const map: Record<string, string> = {
 			TOP: 'Top Lane',
@@ -83,30 +75,6 @@
 		};
 		return map[role] || role;
 	};
-
-	// Fetch recent matches silently, and refetch if the player changes
-	$effect(() => {
-		if (player?.puuid) {
-			loadingMatches = true;
-
-			// Define the async fetch inside the effect
-			const fetchAggregationData = async () => {
-				try {
-					const res = await fetch(`/api/getMatches?puuid=${player.puuid}&count=15`);
-					if (res.ok) {
-						matches = (await res.json()) as MatchSummary[];
-					}
-				} catch (e) {
-					console.error('Failed to load matches for aggregation', e);
-				} finally {
-					loadingMatches = false;
-				}
-			};
-
-			// Call it immediately
-			fetchAggregationData();
-		}
-	});
 </script>
 
 {#if player}
@@ -173,13 +141,30 @@
 					Recent Top Champions (Last 15 Games)
 				</h3>
 
-				{#if loadingMatches}
-					<div class="flex flex-1 items-center justify-center text-on-surface-variant/50">
-						Loading recent performance...
-					</div>
-				{:else if topChampions.length === 0}
-					<div class="flex flex-1 items-center justify-center text-on-surface-variant/50">
-						No recent match data available.
+				{#if topChampions.length === 0}
+					<div class="space-y-3">
+						{#each [1, 2, 3, 4, 5] as i (i)}
+							<div
+								class="flex animate-pulse items-center gap-4 rounded-xl bg-surface-high/30 p-3 ring-1 ring-white/5"
+							>
+								<div class="h-12 w-12 rounded-lg bg-surface-variant/40"></div>
+
+								<div class="flex-1 space-y-2">
+									<div class="h-4 w-24 rounded bg-surface-variant/40"></div>
+									<div class="h-3 w-16 rounded bg-surface-variant/20"></div>
+								</div>
+
+								<div class="flex w-24 flex-col items-end space-y-2">
+									<div class="h-4 w-12 rounded bg-surface-variant/40"></div>
+									<div class="h-3 w-16 rounded bg-surface-variant/20"></div>
+								</div>
+
+								<div class="flex w-20 flex-col items-end space-y-2">
+									<div class="h-4 w-8 rounded bg-surface-variant/40"></div>
+									<div class="h-3 w-8 rounded bg-surface-variant/20"></div>
+								</div>
+							</div>
+						{/each}
 					</div>
 				{:else}
 					<div class="space-y-3">
@@ -234,13 +219,22 @@
 			>
 				<h3 class="mb-6 font-display text-xl font-bold text-white">Role Distribution</h3>
 
-				{#if loadingMatches}
-					<div class="flex flex-1 items-center justify-center text-on-surface-variant/50">
-						Loading roles...
-					</div>
-				{:else if topRoles.length === 0}
-					<div class="flex flex-1 items-center justify-center text-on-surface-variant/50">
-						No role data available.
+				{#if topRoles.length === 0}
+					<div class="space-y-4">
+						{#each [1, 2, 3] as i (i)}
+							<div
+								class="flex animate-pulse items-center justify-between rounded-xl bg-surface-high/30 p-4 ring-1 ring-white/5"
+							>
+								<div class="space-y-2">
+									<div class="h-4 w-20 rounded bg-surface-variant/40"></div>
+									<div class="h-3 w-28 rounded bg-surface-variant/20"></div>
+								</div>
+								<div class="flex flex-col items-end space-y-2">
+									<div class="h-4 w-12 rounded bg-surface-variant/40"></div>
+									<div class="h-3 w-16 rounded bg-surface-variant/20"></div>
+								</div>
+							</div>
+						{/each}
 					</div>
 				{:else}
 					<div class="space-y-4">
