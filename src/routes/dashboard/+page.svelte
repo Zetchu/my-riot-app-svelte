@@ -6,7 +6,7 @@
 	import RoleDistribution from '$lib/components/RoleDistribution/RoleDistribution.svelte';
 
 	let player = $derived(summonerStore.value);
-	let matches = $derived(matchHistoryStore.value);
+	let matches = $derived(matchHistoryStore.value || []);
 </script>
 
 {#if player}

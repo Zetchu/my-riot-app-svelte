@@ -5,6 +5,8 @@
 	import MatchHistoryRow from '$lib/components/MatchHistoryRow/MatchHistoryRow.svelte';
 
 	let error = $state('');
+	// 1. SAFE FALLBACK: Ensure it is always an array, even if the store is empty/null
+	let matches = $derived(matchHistoryStore.value || []);
 
 	// Client-side pagination state
 	let visibleCount = $state(5); // Start by showing 5 out of the 15 cached matches
@@ -24,6 +26,7 @@
 		try {
 			// We still fetch the single heavy detail payload on-demand
 			const response = await fetch(`/api/getMatch?matchId=${matchSummary.matchId}`);
+			console.log('Loaded matches from store:', matches);
 			if (!response.ok) {
 				error = 'Failed to load match details';
 				return;

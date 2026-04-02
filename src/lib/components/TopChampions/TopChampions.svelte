@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { MatchSummary } from '$lib/types';
 
-	let { matches }: { matches: MatchSummary[] } = $props();
+	let { matches = [] }: { matches: MatchSummary[] } = $props();
 
 	let topChampions = $derived.by(() => {
 		if (!matches || matches.length === 0) return [];
