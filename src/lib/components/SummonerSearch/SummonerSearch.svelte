@@ -10,7 +10,10 @@
 		error = $bindable('')
 	} = $props();
 	async function handleSearch() {
-		if (!gameName || !tagLine) return;
+		if (!gameName || !tagLine) {
+			error = 'Please enter both summoner name and tagline';
+			return;
+		}
 
 		loading = true;
 		error = '';
