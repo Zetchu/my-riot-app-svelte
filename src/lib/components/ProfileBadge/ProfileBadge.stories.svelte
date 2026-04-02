@@ -4,8 +4,10 @@
 
 	// 1. Define the component for Storybook
 	const { Story } = defineMeta({
-		title: 'Components/ProfileBadge',
-		component: ProfileBadge
+		title: 'NavigationBar/ProfileBadge',
+		component: ProfileBadge,
+		tags: ['autodocs'],
+		parameters: { layout: 'padded' }
 	});
 
 	// 2. Create some fake "Mock" data to test our UI states
@@ -40,24 +42,3 @@
 		<ProfileBadge player={mockUnrankedPlayer} />
 	</div>
 </Story>
-
-<!-- <Story
-	name="Extremely Long Name"
-	args={{
-		player: {
-			...mockRankedPlayer,
-			gameName: 'SuperLongNameThatMightBreakLayout',
-			tagLine: 'WOW123'
-		}
-	}}
->
-	<div class="w-72 rounded-md bg-surface-low p-4">
-		<ProfileBadge
-			player={{
-				...mockRankedPlayer,
-				gameName: 'SuperLongNameThatMightBreakLayout',
-				tagLine: 'WOW123'
-			}}
-		/>
-	</div>
-</Story> -->

@@ -1,13 +1,14 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { summonerStore } from '$lib/stores/summoner.svelte';
-	import { matchHistoryStore } from '$lib/stores/match.svelte'; // NEW IMPORT
+	import { matchHistoryStore } from '$lib/stores/match.svelte';
 
-	let gameName = $state('');
-	let tagLine = $state('');
-	let loading = $state(false);
-	let error = $state('');
-
+	let {
+		gameName = $bindable(''),
+		tagLine = $bindable(''),
+		loading = $bindable(false),
+		error = $bindable('')
+	} = $props();
 	async function handleSearch() {
 		if (!gameName || !tagLine) return;
 

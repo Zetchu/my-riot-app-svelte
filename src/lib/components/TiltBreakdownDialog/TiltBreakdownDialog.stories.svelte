@@ -3,8 +3,9 @@
 	import TiltBreakdownDialog from './TiltBreakdownDialog.svelte';
 
 	const { Story } = defineMeta({
-		title: 'Components/TiltBreakdownDialog',
+		title: 'MatchDetails/TiltBreakdownDialog',
 		component: TiltBreakdownDialog,
+		tags: ['autodocs'],
 		parameters: {
 			layout: 'centered'
 		}
@@ -12,7 +13,6 @@
 </script>
 
 <script lang="ts">
-	// We bind to this so the button can open the dialog
 	let dialogRef: HTMLDialogElement | undefined = $state();
 </script>
 

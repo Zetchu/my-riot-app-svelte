@@ -4,8 +4,10 @@
 	import type { Participant } from '$lib/types';
 
 	const { Story } = defineMeta({
-		title: 'Components/ParticipantRow',
-		component: ParticipantRow
+		title: 'MatchDetails/ParticipantRow',
+		component: ParticipantRow,
+		tags: ['autodocs'],
+		parameters: { layout: 'padded' }
 	});
 
 	const mockCarry: Participant = {

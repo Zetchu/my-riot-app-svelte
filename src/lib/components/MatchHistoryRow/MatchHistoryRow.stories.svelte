@@ -4,11 +4,12 @@
 	import type { MatchSummary } from '$lib/types';
 
 	const { Story } = defineMeta({
-		title: 'Components/MatchHistoryRow',
-		component: MatchHistoryRow
+		title: 'MatchHistory/MatchHistoryRow',
+		component: MatchHistoryRow,
+		tags: ['autodocs'],
+		parameters: { layout: 'padded' }
 	});
 
-	// Mock data for a Victory
 	const mockVictory: MatchSummary = {
 		matchId: 'EUW1_123',
 		gameDuration: 1845, // ~30 mins
