@@ -69,6 +69,8 @@ export interface MatchDetail {
 			atakhan?: Objective;
 		};
 	}>;
+	tiltScore?: number;
+	tiltModifiers?: string[];
 }
 
 export interface RiotParticipantDto {
@@ -120,10 +122,14 @@ export interface MatchSummary {
 	matchId: string;
 	gameDuration: number;
 	championName: string;
+	teamPosition: string;
 	kills: number;
 	deaths: number;
 	assists: number;
 	win: boolean;
 	cs: number;
 	visionScore: number;
+
+	tiltScore: number;
+	tiltModifiers: string[]; // To tell the user WHY they got this score (e.g., "1v9 Buffer")
 }

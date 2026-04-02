@@ -1,12 +1,30 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { selectedMatchStore } from '$lib/stores/match.svelte';
+	import { summonerStore } from '$lib/stores/summoner.svelte';
 	import type { Participant } from '$lib/types';
 	import ParticipantRow from '$lib/components/ParticipantRow/ParticipantRow.svelte';
+	import TiltBreakdownDialog from '$lib/components/TiltBreakdownDialog/TiltBreakdownDialog.svelte';
 
 	let match = $derived(selectedMatchStore.value);
 	let error = $state('');
 	let loading = $derived(!match && !error);
+
+	let dialogRef = $state<HTMLDialogElement>();
+
+	// Determine tilt color severity for the badge
+	let tiltSeverityClass = $derived(
+		(match?.tiltScore ?? 0) >= 30
+			? 'bg-red-500/10 text-red-400 ring-red-500/30'
+			: (match?.tiltScore ?? 0) >= 15
+				? 'bg-yellow-500/10 text-yellow-400 ring-yellow-500/30'
+				: 'bg-green-500/10 text-green-400 ring-green-500/30'
+	);
+
+	// Find the current player in the 10-person array
+	let currentPlayer = $derived(
+		match?.participants.find((p) => p.puuid === summonerStore.value?.puuid)
+	);
 
 	function formatDuration(seconds: number): string {
 		const minutes = Math.floor(seconds / 60);
@@ -15,22 +33,15 @@
 	}
 
 	$effect(() => {
-		// If no match data is available (e.g. after a full page refresh),
-		// stop showing a loading state and surface an explicit error instead.
 		if (!match && !error) {
 			error =
 				'Match data is not available. Please return to the match history and select a match again.';
 		}
 	});
 
-	// function formatNumber(num: number): string {
-	// 	return num.toLocaleString();
-	// }
-
 	function getTeamParticipants(teamId: number): Participant[] {
 		if (!match) return [];
 		return match.participants.filter((p: Participant) => {
-			// Determine team from win status (team 100 = blue, team 200 = red)
 			const playerTeam = match.teams.find((t: { teamId: number; win: boolean }) =>
 				t.teamId === 100 ? p.win === match.teams[0].win : p.win === match.teams[1].win
 			);
@@ -52,12 +63,41 @@
 	}
 </script>
 
+{#if match}
+	<TiltBreakdownDialog
+		bind:dialogRef
+		tiltScore={match.tiltScore}
+		tiltModifiers={match.tiltModifiers}
+		isWin={currentPlayer?.win}
+	/>
+{/if}
+
 <div class="space-y-6">
-	<div class="flex items-center justify-between">
+	<div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 		<div class="space-y-2">
-			<h1 class="font-display text-3xl font-bold tracking-tight text-white uppercase">
-				Match <span class="bg-kinetic-gradient bg-clip-text text-transparent">Details</span>
-			</h1>
+			<div class="flex items-center gap-4">
+				<h1 class="font-display text-3xl font-bold tracking-tight text-white uppercase">
+					Match <span class="bg-kinetic-gradient bg-clip-text text-transparent">Details</span>
+				</h1>
+
+				{#if match && match.tiltScore !== undefined}
+					<button
+						onclick={() => dialogRef?.showModal()}
+						class={`flex items-center gap-2 rounded-full px-3 py-1 text-xs font-bold ring-1 transition hover:opacity-80 ${tiltSeverityClass}`}
+					>
+						Tilt: {match?.tiltScore}
+						<svg class="h-4 w-4 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+							/>
+						</svg>
+					</button>
+				{/if}
+			</div>
+
 			{#if match}
 				<p class="text-on-surface-variant">
 					{formatDuration(match.gameDuration)} • {match.gameMode}
@@ -80,22 +120,6 @@
 		</div>
 	{:else if loading}
 		<div class="rounded-lg bg-surface-high/30 p-8 text-center">
-			<div class="inline-block animate-spin">
-				<svg
-					class="h-8 w-8 text-primary"
-					xmlns="http://www.w3.org/2000/svg"
-					fill="none"
-					viewBox="0 0 24 24"
-				>
-					<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"
-					></circle>
-					<path
-						class="opacity-75"
-						fill="currentColor"
-						d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-					></path>
-				</svg>
-			</div>
 			<p class="mt-4 text-on-surface-variant">Loading match details...</p>
 		</div>
 	{:else}

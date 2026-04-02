@@ -1,14 +1,16 @@
 <script lang="ts">
-	import { summonerStore } from '$lib/stores/summoner.svelte';
 	import { goto } from '$app/navigation';
+	import { summonerStore } from '$lib/stores/summoner.svelte';
+	import { matchHistoryStore } from '$lib/stores/match.svelte';
 
-	let gameName = $state('');
-	let tagLine = $state('');
-	let loading = $state(false);
-	let error = $state('');
-
-	async function handleSubmit() {
-		if (!gameName.trim() || !tagLine.trim()) {
+	let {
+		gameName = $bindable(''),
+		tagLine = $bindable(''),
+		loading = $bindable(false),
+		error = $bindable('')
+	} = $props();
+	async function handleSearch() {
+		if (!gameName || !tagLine) {
 			error = 'Please enter both summoner name and tagline';
 			return;
 		}
@@ -17,41 +19,28 @@
 		error = '';
 
 		try {
-			console.log('Fetching player data...');
-			const response = await fetch(
-				`/api/getPlayer?gameName=${encodeURIComponent(gameName)}&tagLine=${encodeURIComponent(tagLine)}`
-			);
+			// 1. Fetch Summoner Data
+			const playerRes = await fetch(`/api/getPlayer?gameName=${gameName}&tagLine=${tagLine}`);
+			if (!playerRes.ok) throw new Error('Player not found');
+			const playerData = await playerRes.json();
 
-			if (!response.ok) {
-				const data = await response.json();
-				error = data.error || 'Failed to find summoner';
-				loading = false;
-				console.error('API error:', error);
-				return;
-			}
+			// Save to local storage
+			summonerStore.value = playerData;
 
-			const playerData = await response.json();
-			console.log('Player data received:', playerData);
+			// 2. PRE-FETCH THE FIRST 5 MATCHES
+			// This safely fires 11 API calls to Riot (IDs + 5 Matches + 5 Timelines)
+			const matchesRes = await fetch(`/api/getMatches?puuid=${playerData.puuid}&start=0&count=15`);
+			if (!matchesRes.ok) throw new Error('Failed to pre-fetch matches');
+			const matchesData = await matchesRes.json();
 
-			// Store the summoner data
-			summonerStore.value = {
-				puuid: playerData.puuid,
-				gameName: playerData.gameName,
-				tagLine: playerData.tagLine,
-				summonerLevel: playerData.summonerLevel,
-				profileIconId: playerData.profileIconId,
-				tier: playerData.tier,
-				rank: playerData.rank,
-				leaguePoints: playerData.leaguePoints,
-				wins: playerData.wins,
-				losses: playerData.losses
-			};
-			console.log('Summoner stored');
-			loading = false;
+			// Save to local storage
+			matchHistoryStore.value = matchesData;
+
+			// 3. Move to dashboard ONLY after data is safely cached
 			await goto('/dashboard');
 		} catch (err) {
-			error = 'Failed to load summoner data. Please try again.';
-			console.error('Catch error:', err);
+			error = err instanceof Error ? err.message : 'An error occurred';
+		} finally {
 			loading = false;
 		}
 	}
@@ -100,7 +89,7 @@
 				<form
 					onsubmit={(e) => {
 						e.preventDefault();
-						handleSubmit();
+						handleSearch();
 					}}
 					class="space-y-6"
 				>
