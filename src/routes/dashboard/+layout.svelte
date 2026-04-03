@@ -10,8 +10,7 @@
 
 	const navLinks = [
 		{ name: 'Overview', href: '/dashboard', icon: 'grid' },
-		{ name: 'Match History', href: '/dashboard/history', icon: 'history' },
-		{ name: 'Tilt Analytics', href: '/dashboard/analytics', icon: 'activity' }
+		{ name: 'Match History', href: '/dashboard/history', icon: 'history' }
 	];
 
 	const iconPaths = {
@@ -25,14 +24,6 @@
 		if (href !== '/dashboard' && $page.url.pathname.startsWith(href)) return true;
 		return false;
 	}
-
-	// Global reset for the desktop sidebar button
-	// function handleSearchNew() {
-	// 	summonerStore.value = null;
-	// 	matchHistoryStore.value = [];
-	// 	selectedMatchStore.value = null;
-	// 	goto('/');
-	// }
 </script>
 
 {#if !summonerStore.value?.puuid}

@@ -5,7 +5,6 @@ class SummonerState {
 	#value = $state<SummonerData | null>(null);
 
 	constructor() {
-		// When the app starts, instantly check if we saved a player previously
 		if (browser) {
 			const stored = localStorage.getItem('riot_summoner');
 			if (stored) {
@@ -18,12 +17,10 @@ class SummonerState {
 		}
 	}
 
-	// Whenever your app asks for summonerStore.value, it runs this
 	get value() {
 		return this.#value;
 	}
 
-	// Whenever your app UPDATES summonerStore.value, it runs this and saves it!
 	set value(data: SummonerData | null) {
 		this.#value = data;
 

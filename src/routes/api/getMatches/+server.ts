@@ -34,9 +34,8 @@ export async function GET({ url }) {
 		const matchIds = await idsResponse.json();
 
 		const cleanData = [];
-		const previousChamps: string[] = []; // Array to track Champion Hopping
+		const previousChamps: string[] = [];
 
-		// Use a for...of loop instead of Promise.all to respect rate limits
 		for (const matchId of matchIds) {
 			// 1. Stagger requests by 50ms to prevent 429 Rate Limits
 			await new Promise((resolve) => setTimeout(resolve, 50));

@@ -49,7 +49,6 @@ export async function GET({ url }) {
 			summoner2Id: p.summoner2Id,
 
 			// Runes (Perks)
-			// We drill down to get the primary Keystone ID and the Secondary Tree ID
 			primaryRune: p.perks?.styles?.[0]?.selections?.[0]?.perk || null,
 			secondaryStyle: p.perks?.styles?.[1]?.style || null
 		}));
