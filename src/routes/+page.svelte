@@ -45,7 +45,7 @@
 						class="rounded-full bg-surface-high/50 px-3 py-1 text-sm/6 font-semibold text-primary ring-1 ring-primary/20 backdrop-blur-sm ring-inset"
 					>
 						<span class="mr-2 inline-block h-2 w-2 animate-pulse rounded-full bg-green-500"></span>
-						LIVE SYNC ACTIVE
+						LIVE SYN ACTIVE
 					</span>
 				</a>
 			</div>
